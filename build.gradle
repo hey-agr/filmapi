@@ -11,11 +11,11 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 flyway {
-	url = 'jdbc:postgresql://localhost:5434/filmapi'
+	url = 'jdbc:postgresql://localhost:5432/filmapi'
 	locations = ['filesystem:' + rootDir + '/src/main']
 	user = 'postgres'
-	password = 'P@ssw0rd'
-	schemas = ['filmapi']
+	password = 'postgres'
+	schemas = ['main']
 }
 
 configurations {
@@ -32,7 +32,6 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
 	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.9'
 
 	compile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
 import ru.agr.filmscontent.filmapi.db.repository.MovieRepository;
 
+import java.util.List;
+
 /**
  * Service layer of entity Movie
  *
@@ -22,5 +24,9 @@ public class MovieService {
 
     public void add(Movie movie) {
         movieRepository.save(movie);
+    }
+
+    public List<Movie> getByTitle(String title) {
+        return movieRepository.getAllByTitleLike(title);
     }
 }
