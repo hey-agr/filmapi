@@ -28,7 +28,7 @@ public class Movie extends BaseEntity {
     private Short year;
 
     @Column(name = FilmApiMeta.movie.fld.imdbID)
-    private Integer imdbID;
+    private String imdbID;
 
     @Column(name = FilmApiMeta.movie.fld.type)
     private String type;

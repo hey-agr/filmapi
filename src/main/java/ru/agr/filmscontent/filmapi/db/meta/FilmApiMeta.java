@@ -6,7 +6,7 @@ package ru.agr.filmscontent.filmapi.db.meta;
  * @author Arslan Rabadanov
  */
 public final class FilmApiMeta {
-    public static final String schema = "film_api";
+    public static final String schema = "main";
 
     /**
      * Table Movie
@@ -30,7 +30,7 @@ public final class FilmApiMeta {
             /**
              * IMDB ID
              */
-            public static final String imdbID = "imdbID";
+            public static final String imdbID = "imdb_id";
             /**
              * Type
              */

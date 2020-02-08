@@ -12,5 +12,5 @@ import java.util.Optional;
  * @author Arslan Rabadanov
  */
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-    List<Movie> getAllByTitleLike(String title);
+    List<Movie> getAllByTitleContainingIgnoreCase(String title);
 }
