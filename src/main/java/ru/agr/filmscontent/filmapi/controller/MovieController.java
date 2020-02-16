@@ -1,15 +1,15 @@
 package ru.agr.filmscontent.filmapi.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.agr.filmscontent.filmapi.controller.dto.MovieDTO;
+import ru.agr.filmscontent.filmapi.controller.dto.MovieItem;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
 import ru.agr.filmscontent.filmapi.service.MovieService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Movie REST controller
@@ -26,18 +26,41 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    //s=home%20alone&apikey=4a3b711b
-
-    @GetMapping
-    public MovieDTO greeting(@RequestParam(value = "s") String title, @RequestParam(value = "apikey") String apiKey) {
+    @GetMapping("movies/find")
+    public MovieDTO findByTitle(@RequestParam(value = "title") String title) {
         if (title == null) {
             return new MovieDTO(new ArrayList<>(), "0", "False");
         }
 
         List<Movie> movies = movieService.getByTitle(title);
 
+        return getMovieDTO(movies);
+    }
+
+    @PostMapping("movies/add")
+    public void addFilm(@RequestBody MovieItem movieItem) {
+
+    }
+
+    @GetMapping("movies")
+    public MovieDTO findAll() {
+
+        List<Movie> movies = movieService.getAll();
+
+        return getMovieDTO(movies);
+    }
+
+    private MovieDTO getMovieDTO(List<Movie> movies) {
         if (movies != null) {
-            return new MovieDTO(movies, Integer.toString(movies.size()), "True");
+            return new MovieDTO(movies.stream()
+                    .map(movie -> new MovieItem(movie.getId().toString(),
+                            movie.getTitle(),
+                            movie.getYear(),
+                            movie.getImdbID(),
+                            movie.getType(),
+                            movie.getPoster())).collect(Collectors.toList()),
+                    Integer.toString(movies.size()),
+                    "True");
         } else {
             return new MovieDTO(new ArrayList<>(), "0", "True");
         }

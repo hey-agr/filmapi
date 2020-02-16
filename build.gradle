@@ -8,7 +8,7 @@ plugins {
 
 group = 'ru.agr.filmscontent'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '1.8'
 
 flyway {
 	url = 'jdbc:postgresql://localhost:5432/filmapi'

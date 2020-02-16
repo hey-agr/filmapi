@@ -29,4 +29,8 @@ public class MovieService {
     public List<Movie> getByTitle(String title) {
         return movieRepository.getAllByTitleContainingIgnoreCase(title);
     }
+
+    public List<Movie> getAll() {
+        return movieRepository.findAll();
+    }
 }
