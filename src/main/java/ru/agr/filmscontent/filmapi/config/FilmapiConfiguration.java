@@ -8,6 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.sql.DataSource;
 
@@ -19,6 +24,7 @@ import javax.sql.DataSource;
 @EnableJpaRepositories(basePackages = "ru.agr.filmscontent.filmapi.db.repository")
 @EntityScan(basePackages = "ru.agr.filmscontent.filmapi.db.entity")
 @ComponentScan(basePackages = {"ru.agr.filmscontent.filmapi.service","ru.agr.filmscontent.filmapi.controller"})
+@EnableSwagger2
 @Configuration
 public class FilmapiConfiguration {
     @Value("${spring.datasource.url}")
@@ -35,5 +41,14 @@ public class FilmapiConfiguration {
         config.setUsername(dbUser);
         config.setPassword(dbPassword);
         return new HikariDataSource(config);
+    }
+
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.regex("(?!/error.*).*"))
+                .build();
     }
 }

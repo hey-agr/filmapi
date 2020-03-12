@@ -26,6 +26,12 @@ public class MovieController {
         this.movieService = movieService;
     }
 
+    @GetMapping("/")
+    @ResponseBody
+    public String home() {
+        return "Hello, it,s FilmApiApplication, made by Arslan Rabadanov!";
+    }
+
     @GetMapping("movies/find")
     public MovieDTO findByTitle(@RequestParam(value = "title") String title) {
         if (title == null) {
@@ -39,7 +45,6 @@ public class MovieController {
 
     @PostMapping("movies/add")
     public void addFilm(@RequestBody MovieItem movieItem) {
-
     }
 
     @GetMapping("movies")

@@ -39,6 +39,10 @@ dependencies {
 	// Журналирование
 	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
+    //SWAGGER
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
