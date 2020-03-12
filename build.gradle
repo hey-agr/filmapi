@@ -2,7 +2,6 @@ plugins {
 	id 'org.springframework.boot' version '2.2.4.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
-	id 'war'
 	id "org.flywaydb.flyway" version '5.2.4'
 }
 
@@ -41,7 +40,6 @@ dependencies {
 	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
