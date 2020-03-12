@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import ru.agr.filmscontent.filmapi.db.meta.FilmApiMeta;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Movie entity layer
@@ -30,9 +31,31 @@ public class Movie extends BaseEntity {
     @Column(name = FilmApiMeta.movie.fld.imdbID)
     private String imdbID;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = FilmApiMeta.movie.fld.type)
-    private String type;
+    private MovieType type;
 
     @Column(name = FilmApiMeta.movie.fld.poster)
     private String poster;
+
+    @Column(name = FilmApiMeta.movie.fld.description)
+    private String description;
+
+    @Column(name = FilmApiMeta.movie.fld.country)
+    private String country;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = FilmApiMeta.movie_genre.name, schema = FilmApiMeta.schema,
+            joinColumns = {
+                @JoinColumn(name = FilmApiMeta.movie_genre.fld.movie_id, referencedColumnName = FilmApiMeta.movie.fld.id)
+            },
+            inverseJoinColumns = {
+                @JoinColumn(name = FilmApiMeta.movie_genre.fld.genre_id, referencedColumnName = FilmApiMeta.genre.fld.id)
+    })
+    private List<Genre> genres;
+
+    public enum MovieType {
+        movie,
+        series
+    }
 }

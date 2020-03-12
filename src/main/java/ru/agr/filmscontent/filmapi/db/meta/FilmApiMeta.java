@@ -39,6 +39,50 @@ public final class FilmApiMeta {
              * Poster (image address)
              */
             public static final String poster = "poster";
+            /**
+             * Description
+             */
+            public static final String description = "description";
+            /**
+             * Country
+             */
+            public static final String country = "country";
+        }
+    }
+
+    /**
+     * Table Genre
+     */
+    public static final class genre {
+        public static final String name = "genre";
+
+        public static final class fld {
+            /**
+             * ID
+             */
+            public static final String id = "id";
+            /**
+             * Name
+             */
+            public static final String name = "name";
+        }
+    }
+
+    /**
+     * Table MovieGenre
+     */
+    public static final class movie_genre {
+        public static final String name = "movie_genre";
+
+        public static final class fld {
+            /**
+             * Movie ID
+             */
+            public static final String movie_id = "movie_id";
+            /**
+             * Genre ID
+             */
+            public static final String genre_id = "genre_id";
         }
     }
 }

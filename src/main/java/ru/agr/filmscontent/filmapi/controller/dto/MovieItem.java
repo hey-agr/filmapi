@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -25,4 +26,10 @@ public class MovieItem implements Serializable {
     private String type;
 
     private String poster;
+
+    private String description;
+
+    private String country;
+
+    private List<GenreItem> genres;
 }

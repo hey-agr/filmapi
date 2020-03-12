@@ -1,11 +1,14 @@
 package ru.agr.filmscontent.filmapi.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.agr.filmscontent.filmapi.controller.dto.GenreItem;
 import ru.agr.filmscontent.filmapi.controller.dto.MovieDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.MovieItem;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
 import ru.agr.filmscontent.filmapi.service.MovieService;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,7 @@ public class MovieController {
         this.movieService = movieService;
     }
 
+    @ApiIgnore
     @GetMapping("/")
     @ResponseBody
     public String home() {
@@ -43,10 +47,6 @@ public class MovieController {
         return getMovieDTO(movies);
     }
 
-    @PostMapping("movies/add")
-    public void addFilm(@RequestBody MovieItem movieItem) {
-    }
-
     @GetMapping("movies")
     public MovieDTO findAll() {
 
@@ -62,8 +62,14 @@ public class MovieController {
                             movie.getTitle(),
                             movie.getYear(),
                             movie.getImdbID(),
-                            movie.getType(),
-                            movie.getPoster())).collect(Collectors.toList()),
+                            (movie.getType() != null) ? movie.getType().name() : "",
+                            movie.getPoster(),
+                            movie.getDescription(),
+                            movie.getCountry(),
+                            movie.getGenres().stream()
+                                    .map(genre -> new GenreItem(genre.getName()))
+                                    .collect(Collectors.toList())))
+                    .collect(Collectors.toList()),
                     Integer.toString(movies.size()),
                     "True");
         } else {
