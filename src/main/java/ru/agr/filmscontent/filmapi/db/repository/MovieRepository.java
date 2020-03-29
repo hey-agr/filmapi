@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Repository of entity Movie

@@ -1,8 +1,10 @@
 package ru.agr.filmscontent.filmapi.controller;
 
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import ru.agr.filmscontent.filmapi.controller.dto.GenreItem;
 import ru.agr.filmscontent.filmapi.controller.dto.MovieDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.MovieItem;

@@ -15,7 +15,7 @@ import java.util.List;
  * @author Arslan Rabadanov
  */
 @Entity
-@Table(schema = FilmApiMeta.schema, name = FilmApiMeta.movie.name)
+@Table(schema = FilmApiMeta.SCHEMA, name = FilmApiMeta.movie.name)
 @Data @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode(callSuper = false)
 public class Movie extends BaseEntity {
     @Id
@@ -45,7 +45,7 @@ public class Movie extends BaseEntity {
     private String country;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = FilmApiMeta.movie_genre.name, schema = FilmApiMeta.schema,
+    @JoinTable(name = FilmApiMeta.movie_genre.name, schema = FilmApiMeta.SCHEMA,
             joinColumns = {
                 @JoinColumn(name = FilmApiMeta.movie_genre.fld.movie_id, referencedColumnName = FilmApiMeta.movie.fld.id)
             },

@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @author Arslan Rabadanov
  */
 @Entity
-@Table(schema = FilmApiMeta.schema, name = FilmApiMeta.genre.name)
+@Table(schema = FilmApiMeta.SCHEMA, name = FilmApiMeta.genre.name)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
