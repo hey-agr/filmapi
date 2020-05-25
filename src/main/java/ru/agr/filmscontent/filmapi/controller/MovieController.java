@@ -62,6 +62,7 @@ public class MovieController {
             return new MovieDTO(movies.stream()
                     .map(movie -> new MovieItem(movie.getId().toString(),
                             movie.getTitle(),
+                            movie.getTitleEn(),
                             movie.getYear(),
                             movie.getImdbID(),
                             (movie.getType() != null) ? movie.getType().name() : "",

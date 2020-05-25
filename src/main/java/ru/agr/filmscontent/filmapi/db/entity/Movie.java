@@ -25,6 +25,9 @@ public class Movie extends BaseEntity {
     @Column(name = FilmApiMeta.movie.fld.title)
     private String title;
 
+    @Column(name = FilmApiMeta.movie.fld.title_en)
+    private String titleEn;
+
     @Column(name = FilmApiMeta.movie.fld.year)
     private Short year;
 

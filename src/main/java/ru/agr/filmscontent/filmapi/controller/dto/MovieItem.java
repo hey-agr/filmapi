@@ -19,6 +19,8 @@ public class MovieItem implements Serializable {
 
     private String title;
 
+    private String titleEn;
+
     private Short year;
 
     private String imdbID;

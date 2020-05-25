@@ -6,10 +6,10 @@ package ru.agr.filmscontent.filmapi.db.meta;
  * @author Arslan Rabadanov
  */
 public final class FilmApiMeta {
+    public static final String SCHEMA = "main";
+
     private FilmApiMeta() {
     }
-
-    public static final String SCHEMA = "main";
 
     /**
      * Table Movie
@@ -26,6 +26,10 @@ public final class FilmApiMeta {
              * Title
              */
             public static final String title = "title";
+            /**
+             * Title (en)
+             */
+            public static final String title_en = "title_en";
             /**
              * Year
              */
