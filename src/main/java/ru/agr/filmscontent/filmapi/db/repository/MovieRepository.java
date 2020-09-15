@@ -13,10 +13,6 @@ import java.util.List;
  * @author Arslan Rabadanov
  */
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-    List<Movie> getAllByTitleContainingIgnoreCase(String title);
-
-    List<Movie> findAll();
-
     @Query("SELECT DISTINCT m FROM Movie m LEFT JOIN FETCH m.genres order by m.id")
     List<Movie> findAllWithGenre();
 

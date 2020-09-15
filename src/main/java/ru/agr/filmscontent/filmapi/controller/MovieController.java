@@ -1,13 +1,13 @@
 package ru.agr.filmscontent.filmapi.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.*;
 import ru.agr.filmscontent.filmapi.controller.dto.GenreItem;
 import ru.agr.filmscontent.filmapi.controller.dto.MovieDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.MovieItem;
+import ru.agr.filmscontent.filmapi.controller.dto.MoviesPageResult;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
 import ru.agr.filmscontent.filmapi.service.MovieService;
 import springfox.documentation.annotations.ApiIgnore;
@@ -57,26 +57,46 @@ public class MovieController {
         return getMovieDTO(movies);
     }
 
+    @RequestMapping(value = "movies/page={pageNum}/size={pageSize}", method = RequestMethod.GET)
+    public MoviesPageResult findAllPageable(@PathVariable(value="pageNum") Integer pageNum,
+                                            @PathVariable(value="pageSize") Integer pageSize) {
+
+        Page<Movie> moviesPage = movieService.getAll(PageRequest.of(pageNum, pageSize));
+
+        getMovieDTO(moviesPage.getContent());
+
+        return new MoviesPageResult(pageNum,
+                moviesPage.getTotalPages(),
+                pageSize,
+                moviesPage.getContent().size(),
+                getMovieItems(moviesPage.getContent()));
+    }
+
     private MovieDTO getMovieDTO(List<Movie> movies) {
         if (movies != null) {
-            return new MovieDTO(movies.stream()
-                    .map(movie -> new MovieItem(movie.getId().toString(),
-                            movie.getTitle(),
-                            movie.getTitleEn(),
-                            movie.getYear(),
-                            movie.getImdbID(),
-                            (movie.getType() != null) ? movie.getType().name() : "",
-                            movie.getPoster(),
-                            movie.getDescription(),
-                            movie.getCountry(),
-                            movie.getGenres().stream()
-                                    .map(genre -> new GenreItem(genre.getName()))
-                                    .collect(Collectors.toList())))
-                    .collect(Collectors.toList()),
+            return new MovieDTO(getMovieItems(movies),
                     Integer.toString(movies.size()),
                     "True");
         } else {
             return new MovieDTO(new ArrayList<>(), "0", "True");
         }
+    }
+
+    private List<MovieItem> getMovieItems(List<Movie> movies) {
+        return movies.stream()
+                .map(movie ->
+                        new MovieItem(movie.getId().toString(),
+                                movie.getTitle(),
+                                movie.getTitleEn(),
+                                movie.getYear(),
+                                movie.getImdbID(),
+                                (movie.getType() != null) ? movie.getType().name() : "",
+                                movie.getPoster(),
+                                movie.getDescription(),
+                                movie.getCountry(),
+                                movie.getGenres().stream()
+                                        .map(genre -> new GenreItem(genre.getName()))
+                                        .collect(Collectors.toList())))
+                    .collect(Collectors.toList());
     }
 }

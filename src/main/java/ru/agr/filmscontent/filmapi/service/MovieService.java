@@ -1,6 +1,8 @@
 package ru.agr.filmscontent.filmapi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
 import ru.agr.filmscontent.filmapi.db.repository.MovieRepository;
@@ -32,5 +34,9 @@ public class MovieService {
 
     public List<Movie> getAll() {
         return movieRepository.findAllWithGenre();
+    }
+
+    public Page<Movie> getAll(Pageable pageable) {
+        return movieRepository.findAll(pageable);
     }
 }
