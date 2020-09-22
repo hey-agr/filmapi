@@ -5,10 +5,10 @@ package ru.agr.filmscontent.filmapi.db.meta;
  *
  * @author Arslan Rabadanov
  */
-public final class FilmApiMeta {
+public final class FilmApiMetaUtils {
     public static final String SCHEMA = "main";
 
-    private FilmApiMeta() {
+    private FilmApiMetaUtils() {
     }
 
     /**

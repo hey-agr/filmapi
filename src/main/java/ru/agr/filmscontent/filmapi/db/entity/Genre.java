@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import ru.agr.filmscontent.filmapi.db.meta.FilmApiMeta;
+import ru.agr.filmscontent.filmapi.db.meta.FilmApiMetaUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,16 +17,16 @@ import javax.persistence.Table;
  * @author Arslan Rabadanov
  */
 @Entity
-@Table(schema = FilmApiMeta.SCHEMA, name = FilmApiMeta.genre.name)
+@Table(schema = FilmApiMetaUtils.SCHEMA, name = FilmApiMetaUtils.genre.name)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Genre extends BaseEntity {
     @Id
-    @Column(name = FilmApiMeta.genre.fld.id)
+    @Column(name = FilmApiMetaUtils.genre.fld.id)
     private Long id;
 
-    @Column(name = FilmApiMeta.genre.fld.name)
+    @Column(name = FilmApiMetaUtils.genre.fld.name)
     private String name;
 }

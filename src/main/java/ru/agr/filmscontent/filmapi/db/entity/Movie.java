@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import ru.agr.filmscontent.filmapi.db.meta.FilmApiMeta;
+import ru.agr.filmscontent.filmapi.db.meta.FilmApiMetaUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,45 +24,45 @@ import java.util.List;
  * @author Arslan Rabadanov
  */
 @Entity
-@Table(schema = FilmApiMeta.SCHEMA, name = FilmApiMeta.movie.name)
+@Table(schema = FilmApiMetaUtils.SCHEMA, name = FilmApiMetaUtils.movie.name)
 @Data @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode(callSuper = false)
 public class Movie extends BaseEntity {
     @Id
-    @Column(name = FilmApiMeta.movie.fld.id)
+    @Column(name = FilmApiMetaUtils.movie.fld.id)
     private Long id;
 
-    @Column(name = FilmApiMeta.movie.fld.title)
+    @Column(name = FilmApiMetaUtils.movie.fld.title)
     private String title;
 
-    @Column(name = FilmApiMeta.movie.fld.title_en)
+    @Column(name = FilmApiMetaUtils.movie.fld.title_en)
     private String titleEn;
 
-    @Column(name = FilmApiMeta.movie.fld.year)
+    @Column(name = FilmApiMetaUtils.movie.fld.year)
     private Short year;
 
-    @Column(name = FilmApiMeta.movie.fld.imdbID)
+    @Column(name = FilmApiMetaUtils.movie.fld.imdbID)
     private String imdbID;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = FilmApiMeta.movie.fld.type)
+    @Column(name = FilmApiMetaUtils.movie.fld.type)
     private MovieType type;
 
-    @Column(name = FilmApiMeta.movie.fld.poster)
+    @Column(name = FilmApiMetaUtils.movie.fld.poster)
     private String poster;
 
-    @Column(name = FilmApiMeta.movie.fld.description)
+    @Column(name = FilmApiMetaUtils.movie.fld.description)
     private String description;
 
-    @Column(name = FilmApiMeta.movie.fld.country)
+    @Column(name = FilmApiMetaUtils.movie.fld.country)
     private String country;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = FilmApiMeta.movie_genre.name, schema = FilmApiMeta.SCHEMA,
+    @JoinTable(name = FilmApiMetaUtils.movie_genre.name, schema = FilmApiMetaUtils.SCHEMA,
             joinColumns = {
-                @JoinColumn(name = FilmApiMeta.movie_genre.fld.movie_id, referencedColumnName = FilmApiMeta.movie.fld.id)
+                @JoinColumn(name = FilmApiMetaUtils.movie_genre.fld.movie_id, referencedColumnName = FilmApiMetaUtils.movie.fld.id)
             },
             inverseJoinColumns = {
-                @JoinColumn(name = FilmApiMeta.movie_genre.fld.genre_id, referencedColumnName = FilmApiMeta.genre.fld.id)
+                @JoinColumn(name = FilmApiMetaUtils.movie_genre.fld.genre_id, referencedColumnName = FilmApiMetaUtils.genre.fld.id)
     })
     private List<Genre> genres;
 
