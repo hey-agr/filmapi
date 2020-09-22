@@ -7,19 +7,12 @@ import lombok.Getter;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- *
- *
- * @author Arslan Rabadanov
- */
 @AllArgsConstructor
+@Getter
 public class MovieDTO implements Serializable {
-    @Getter
-    private List<MovieItem> Search;
+    private final List<MovieItem> search;
 
-    @Getter
-    private String totalResults;
+    private final String totalResults;
 
-    @Getter
-    private String Response;
+    private final Boolean response;
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.agr.filmscontent.filmapi.controller.dto.GenreItem;
 import ru.agr.filmscontent.filmapi.controller.dto.MovieDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.MovieItem;
-import ru.agr.filmscontent.filmapi.controller.dto.MoviesPageResult;
+import ru.agr.filmscontent.filmapi.controller.dto.MoviesPageDTO;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
 import ru.agr.filmscontent.filmapi.service.MovieService;
 import springfox.documentation.annotations.ApiIgnore;
@@ -47,16 +47,16 @@ public class MovieController {
     }
 
     @RequestMapping(value = "movies/page={pageNum}/size={pageSize}", method = RequestMethod.GET)
-    public MoviesPageResult findAllPageable(@PathVariable(value="pageNum") Integer pageNum,
-                                            @PathVariable(value="pageSize") Integer pageSize) {
+    public MoviesPageDTO findAllPageable(@PathVariable(value="pageNum") Integer pageNum,
+                                         @PathVariable(value="pageSize") Integer pageSize) {
 
         Page<Movie> moviesPage = movieService.getAll(PageRequest.of(pageNum-1, pageSize));
 
-        return new MoviesPageResult(pageNum,
+        return new MoviesPageDTO(pageNum,
                 moviesPage.getTotalPages(),
                 pageSize,
                 Integer.valueOf(moviesPage.getContent().size()).longValue(),
-                movieService.count(),
+                movieService.count().toString(),
                 true,
                 getMovieItems(moviesPage.getContent()));
     }
@@ -64,7 +64,7 @@ public class MovieController {
     @GetMapping("movies/find")
     public MovieDTO findByTitle(@RequestParam(value = "title") String title) {
         if (title == null) {
-            return new MovieDTO(new ArrayList<>(), "0", "False");
+            return new MovieDTO(new ArrayList<>(), "0", false);
         }
 
         List<Movie> movies = movieService.getByTitle(title);
@@ -73,26 +73,26 @@ public class MovieController {
     }
 
     @RequestMapping(value = "movies/page={pageNum}/size={pageSize}/find", method = RequestMethod.GET)
-    public MoviesPageResult findByTitlePageable(@PathVariable(value="pageNum") Integer pageNum,
-                                        @PathVariable(value="pageSize") Integer pageSize,
-                                        @RequestParam(value = "title") String title) {
+    public MoviesPageDTO findByTitlePageable(@PathVariable(value="pageNum") Integer pageNum,
+                                             @PathVariable(value="pageSize") Integer pageSize,
+                                             @RequestParam(value = "title") String title) {
         if (title == null) {
-            return new MoviesPageResult(pageNum,
+            return new MoviesPageDTO(pageNum,
                     0,
                     pageSize,
                     0L,
-                    movieService.count(),
+                    movieService.count().toString(),
                     false,
                     new ArrayList<>());
         }
 
         Page<Movie> moviesPage = movieService.getByTitle(title, PageRequest.of(pageNum-1, pageSize));
 
-        return new MoviesPageResult(pageNum,
+        return new MoviesPageDTO(pageNum,
                 moviesPage.getTotalPages(),
                 pageSize,
                 Integer.valueOf(moviesPage.getContent().size()).longValue(),
-                movieService.count(),
+                movieService.count().toString(),
                 true,
                 getMovieItems(moviesPage.getContent()));
     }
@@ -101,9 +101,9 @@ public class MovieController {
         if (movies != null) {
             return new MovieDTO(getMovieItems(movies),
                     Integer.toString(movies.size()),
-                    "True");
+                    true);
         } else {
-            return new MovieDTO(new ArrayList<>(), "0", "True");
+            return new MovieDTO(new ArrayList<>(), "0", false);
         }
     }
 
