@@ -50,7 +50,7 @@ public class MovieController {
     public MoviesPageResult findAllPageable(@PathVariable(value="pageNum") Integer pageNum,
                                             @PathVariable(value="pageSize") Integer pageSize) {
 
-        Page<Movie> moviesPage = movieService.getAll(PageRequest.of(pageNum, pageSize));
+        Page<Movie> moviesPage = movieService.getAll(PageRequest.of(pageNum-1, pageSize));
 
         return new MoviesPageResult(pageNum,
                 moviesPage.getTotalPages(),
@@ -86,7 +86,7 @@ public class MovieController {
                     new ArrayList<>());
         }
 
-        Page<Movie> moviesPage = movieService.getByTitle(title, PageRequest.of(pageNum, pageSize));
+        Page<Movie> moviesPage = movieService.getByTitle(title, PageRequest.of(pageNum-1, pageSize));
 
         return new MoviesPageResult(pageNum,
                 moviesPage.getTotalPages(),
