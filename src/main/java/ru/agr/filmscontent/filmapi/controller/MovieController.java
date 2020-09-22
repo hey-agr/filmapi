@@ -62,7 +62,7 @@ public class MovieController {
                 moviesPage.getTotalPages(),
                 pageSize,
                 Integer.valueOf(moviesPage.getContent().size()).longValue(),
-                movieService.count().toString(),
+                movieService.count(),
                 true,
                 getMovieItems(moviesPage.getContent()));
     }
@@ -70,7 +70,7 @@ public class MovieController {
     @GetMapping("movies/find")
     public MovieDTO findByTitle(@RequestParam(value = "title") String title) {
         if (title == null) {
-            return new MovieDTO(new ArrayList<>(), "0", false);
+            return new MovieDTO(new ArrayList<>(), 0L, false);
         }
 
         List<Movie> movies = movieService.getByTitle(title);
@@ -87,7 +87,7 @@ public class MovieController {
                     0,
                     pageSize,
                     0L,
-                    movieService.count().toString(),
+                    0L,
                     false,
                     new ArrayList<>());
         }
@@ -98,7 +98,7 @@ public class MovieController {
                 moviesPage.getTotalPages(),
                 pageSize,
                 Integer.valueOf(moviesPage.getContent().size()).longValue(),
-                movieService.count().toString(),
+                movieService.countByTitle(title),
                 true,
                 getMovieItems(moviesPage.getContent()));
     }
@@ -106,10 +106,10 @@ public class MovieController {
     private MovieDTO getMovieDTO(List<Movie> movies) {
         if (movies != null) {
             return new MovieDTO(getMovieItems(movies),
-                    Integer.toString(movies.size()),
+                    Integer.valueOf(movies.size()).longValue(),
                     true);
         } else {
-            return new MovieDTO(new ArrayList<>(), "0", false);
+            return new MovieDTO(new ArrayList<>(), 0L, false);
         }
     }
 

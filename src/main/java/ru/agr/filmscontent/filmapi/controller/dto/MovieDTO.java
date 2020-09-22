@@ -12,7 +12,7 @@ import java.util.List;
 public class MovieDTO implements Serializable {
     private final List<MovieItem> search;
 
-    private final String totalResults;
+    private final Long totalResults;
 
     private final Boolean response;
 }

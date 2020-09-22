@@ -27,4 +27,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query("SELECT DISTINCT m FROM Movie m fetch all properties WHERE lower(m.title) LIKE lower(concat('%',:title,'%')) order by m.id")
     Page<Movie> getAllByTitleContainingIgnoreCaseWithGenre(@Param("title") String title, Pageable pageable);
+
+    @Query("SELECT COUNT(m) FROM Movie m WHERE lower(m.title) LIKE lower(concat('%',:title,'%'))")
+    Long countByTitleIgnoreCase(@Param("title") String title);
 }

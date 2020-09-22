@@ -47,4 +47,8 @@ public class MovieService {
     public Long count() {
         return movieRepository.count();
     }
+
+    public Long countByTitle(String title) {
+        return movieRepository.countByTitleIgnoreCase(title);
+    }
 }
