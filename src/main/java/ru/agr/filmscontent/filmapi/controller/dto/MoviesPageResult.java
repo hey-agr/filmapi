@@ -14,7 +14,11 @@ public class MoviesPageResult {
 
     private Integer pageSize;
 
-    private Integer totalSize;
+    private Long currentSize;
 
-    private List<MovieItem> result;
+    private Long totalResults;
+
+    private Boolean response;
+
+    private List<MovieItem> search;
 }

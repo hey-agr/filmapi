@@ -38,17 +38,6 @@ public class MovieController {
         return "Hello, it,s FilmApiApplication, made by Arslan Rabadanov!";
     }
 
-    @GetMapping("movies/find")
-    public MovieDTO findByTitle(@RequestParam(value = "title") String title) {
-        if (title == null) {
-            return new MovieDTO(new ArrayList<>(), "0", "False");
-        }
-
-        List<Movie> movies = movieService.getByTitle(title);
-
-        return getMovieDTO(movies);
-    }
-
     @GetMapping("movies")
     public MovieDTO findAll() {
 
@@ -63,12 +52,48 @@ public class MovieController {
 
         Page<Movie> moviesPage = movieService.getAll(PageRequest.of(pageNum, pageSize));
 
-        getMovieDTO(moviesPage.getContent());
+        return new MoviesPageResult(pageNum,
+                moviesPage.getTotalPages(),
+                pageSize,
+                Integer.valueOf(moviesPage.getContent().size()).longValue(),
+                movieService.count(),
+                true,
+                getMovieItems(moviesPage.getContent()));
+    }
+
+    @GetMapping("movies/find")
+    public MovieDTO findByTitle(@RequestParam(value = "title") String title) {
+        if (title == null) {
+            return new MovieDTO(new ArrayList<>(), "0", "False");
+        }
+
+        List<Movie> movies = movieService.getByTitle(title);
+
+        return getMovieDTO(movies);
+    }
+
+    @RequestMapping(value = "movies/page={pageNum}/size={pageSize}/find", method = RequestMethod.GET)
+    public MoviesPageResult findByTitlePageable(@PathVariable(value="pageNum") Integer pageNum,
+                                        @PathVariable(value="pageSize") Integer pageSize,
+                                        @RequestParam(value = "title") String title) {
+        if (title == null) {
+            return new MoviesPageResult(pageNum,
+                    0,
+                    pageSize,
+                    0L,
+                    movieService.count(),
+                    false,
+                    new ArrayList<>());
+        }
+
+        Page<Movie> moviesPage = movieService.getByTitle(title, PageRequest.of(pageNum, pageSize));
 
         return new MoviesPageResult(pageNum,
                 moviesPage.getTotalPages(),
                 pageSize,
-                moviesPage.getContent().size(),
+                Integer.valueOf(moviesPage.getContent().size()).longValue(),
+                movieService.count(),
+                true,
                 getMovieItems(moviesPage.getContent()));
     }
 

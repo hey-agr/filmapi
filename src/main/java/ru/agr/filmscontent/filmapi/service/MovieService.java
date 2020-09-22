@@ -32,11 +32,19 @@ public class MovieService {
         return movieRepository.getAllByTitleContainingIgnoreCaseWithGenre(title);
     }
 
+    public Page<Movie> getByTitle(String title, Pageable pageable) {
+        return movieRepository.getAllByTitleContainingIgnoreCaseWithGenre(title, pageable);
+    }
+
     public List<Movie> getAll() {
         return movieRepository.findAllWithGenre();
     }
 
     public Page<Movie> getAll(Pageable pageable) {
-        return movieRepository.findAll(pageable);
+        return movieRepository.findAllWithGenre(pageable);
+    }
+
+    public Long count() {
+        return movieRepository.count();
     }
 }
