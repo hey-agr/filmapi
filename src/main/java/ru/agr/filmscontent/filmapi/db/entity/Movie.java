@@ -1,21 +1,9 @@
 package ru.agr.filmscontent.filmapi.db.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.agr.filmscontent.filmapi.db.meta.FilmApiMetaUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -25,9 +13,10 @@ import java.util.List;
  */
 @Entity
 @Table(schema = FilmApiMetaUtils.SCHEMA, name = FilmApiMetaUtils.movie.name)
-@Data @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode(callSuper = false)
+@Data @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode(callSuper = false) @Builder
 public class Movie extends BaseEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = FilmApiMetaUtils.movie.fld.id)
     private Long id;
 
@@ -68,6 +57,6 @@ public class Movie extends BaseEntity {
 
     public enum MovieType {
         movie,
-        series
+        series;
     }
 }

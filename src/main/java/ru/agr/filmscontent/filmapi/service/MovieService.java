@@ -24,8 +24,12 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public void add(Movie movie) {
-        movieRepository.save(movie);
+    public Movie save(Movie movie) {
+        return movieRepository.saveAndFlush(movie);
+    }
+
+    public void delete(Movie movie) {
+        movieRepository.delete(movie);
     }
 
     public List<Movie> getByTitle(String title) {
@@ -50,5 +54,9 @@ public class MovieService {
 
     public Long countByTitle(String title) {
         return movieRepository.countByTitleIgnoreCase(title);
+    }
+
+    public Movie getById(long id) {
+        return movieRepository.findById(id).orElse(null);
     }
 }
