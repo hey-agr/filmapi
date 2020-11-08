@@ -54,6 +54,10 @@ public final class FilmApiMetaUtils {
              * Country
              */
             public static final String country = "country";
+            /**
+             * URL видео
+             */
+            public static final String video = "video";
         }
     }
 

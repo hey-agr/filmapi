@@ -35,5 +35,7 @@ public class MovieItem implements Serializable {
 
     private String country;
 
+    private String video;
+
     private List<GenreItem> genres;
 }

@@ -185,6 +185,7 @@ public class MovieController {
                 .title(movieItem.getTitle())
                 .titleEn(movieItem.getTitleEn())
                 .year(movieItem.getYear())
+                .video(movieItem.getVideo())
                 .genres(movieItem.getGenres().stream()
                         .filter(genreItem -> convertGenreItemToGenre(genreItem) != null)
                         .map(this::convertGenreItemToGenre).collect(Collectors.toList()))
@@ -207,6 +208,7 @@ public class MovieController {
                                 movie.getPoster(),
                                 movie.getDescription(),
                                 movie.getCountry(),
+                                movie.getVideo(),
                                 movie.getGenres().stream()
                                         .map(genre -> new GenreItem(genre.getName()))
                                         .collect(Collectors.toList())))

@@ -45,7 +45,10 @@ public class Movie extends BaseEntity {
     @Column(name = FilmApiMetaUtils.movie.fld.country)
     private String country;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @Column(name = FilmApiMetaUtils.movie.fld.video)
+    private String video;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = FilmApiMetaUtils.movie_genre.name, schema = FilmApiMetaUtils.SCHEMA,
             joinColumns = {
                 @JoinColumn(name = FilmApiMetaUtils.movie_genre.fld.movie_id, referencedColumnName = FilmApiMetaUtils.movie.fld.id)
