@@ -4,8 +4,16 @@ import org.springframework.stereotype.Component;
 import ru.agr.filmscontent.filmapi.controller.dto.genre.GenreItem;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieItem;
-import ru.agr.filmscontent.filmapi.controller.dto.user.*;
-import ru.agr.filmscontent.filmapi.db.entity.*;
+import ru.agr.filmscontent.filmapi.controller.dto.user.RoleDTO;
+import ru.agr.filmscontent.filmapi.controller.dto.user.RoleForm;
+import ru.agr.filmscontent.filmapi.controller.dto.user.RolePermissionDTO;
+import ru.agr.filmscontent.filmapi.controller.dto.user.UserBaseForm;
+import ru.agr.filmscontent.filmapi.controller.dto.user.UserDTO;
+import ru.agr.filmscontent.filmapi.db.entity.Genre;
+import ru.agr.filmscontent.filmapi.db.entity.Movie;
+import ru.agr.filmscontent.filmapi.db.entity.Role;
+import ru.agr.filmscontent.filmapi.db.entity.RolePermission;
+import ru.agr.filmscontent.filmapi.db.entity.User;
 import ru.agr.filmscontent.filmapi.service.GenreService;
 import ru.agr.filmscontent.filmapi.service.RoleService;
 

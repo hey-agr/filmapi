@@ -1,6 +1,10 @@
 package ru.agr.filmscontent.filmapi.security.jwt;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,14 +19,14 @@ import java.util.List;
 
 @Component
 public class JwtTokenProvider {
-	
+
+    private String secretKey;
+
     private CustomUserDetailsService userDetailsService;
 
     public JwtTokenProvider(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
-
-    private String secretKey;
 
     @PostConstruct
     protected void init() {

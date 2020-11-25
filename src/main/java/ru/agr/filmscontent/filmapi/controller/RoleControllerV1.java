@@ -3,7 +3,14 @@ package ru.agr.filmscontent.filmapi.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.agr.filmscontent.filmapi.controller.dto.DtoConverter;
 import ru.agr.filmscontent.filmapi.controller.dto.user.RoleForm;
@@ -18,7 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.ResponseEntity.*;
+import static org.springframework.http.ResponseEntity.created;
+import static org.springframework.http.ResponseEntity.noContent;
+import static org.springframework.http.ResponseEntity.ok;
 
 @Slf4j
 @RestController
@@ -49,7 +58,7 @@ public class RoleControllerV1 {
         if (!authenticationService.hasAuthority(request, RolePermission.Authority.USER_ADMIN)) {
             return authenticationService.authorityException(RolePermission.Authority.USER_ADMIN);
         }
-        return ResponseEntity.ok(
+        return ok(
                 roleService.getAll().stream()
                         .map(dtoConverter::convertRoleToDTO)
                         .collect(Collectors.toList())
