@@ -2,7 +2,7 @@
 
 Simple REST API
 
-Spring Boot / Spring Data JPA / Spring Web / PostgreSQL / Swagger / Lombok
+Spring Boot / Spring Data JPA / Spring Web / Spring Security / PostgreSQL / Swagger / Lombok
 
 https://salty-lowlands-03006.herokuapp.com/swagger-ui.html
 

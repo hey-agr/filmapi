@@ -15,6 +15,7 @@ import java.util.Set;
 @Entity
 @Table(schema = FilmApiMetaUtils.SCHEMA, name = FilmApiMetaUtils.role.name)
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
