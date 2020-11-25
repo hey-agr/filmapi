@@ -7,10 +7,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.agr.filmscontent.filmapi.controller.dto.auth.AuthenticationRequest;
 import ru.agr.filmscontent.filmapi.db.entity.Role;
-import ru.agr.filmscontent.filmapi.db.repository.UserRepository;
 import ru.agr.filmscontent.filmapi.security.jwt.JwtTokenProvider;
 import ru.agr.filmscontent.filmapi.service.UserService;
 

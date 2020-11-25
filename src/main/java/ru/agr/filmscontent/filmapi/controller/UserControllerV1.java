@@ -35,18 +35,14 @@ public class UserControllerV1 {
 
     private final UserService userService;
 
-    private final RoleService roleService;
-
     private final AuthenticationService authenticationService;
 
     private final DtoConverter dtoConverter;
 
     public UserControllerV1(UserService userService,
-                            RoleService roleService,
                             AuthenticationService authenticationService,
                             DtoConverter dtoConverter) {
         this.userService = userService;
-        this.roleService = roleService;
         this.authenticationService = authenticationService;
         this.dtoConverter = dtoConverter;
     }

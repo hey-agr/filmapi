@@ -1,6 +1,5 @@
 package ru.agr.filmscontent.filmapi.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +20,27 @@ import ru.agr.filmscontent.filmapi.security.jwt.JwtTokenProvider;
  */
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private static final String[] WHITELIST = {
+            // -- swagger ui
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/webjars/**",
+            // -- authenticate
+            "/api/v1/auth/login",
+            //old api
+            "/movies",
+            "/movies/*",
+            "/genre",
+            "/"
+    };
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -58,24 +78,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .apply(new JwtSecurityConfigurer(jwtTokenProvider));
     }
 
-    private static final String[] WHITELIST = {
-            // -- swagger ui
-            "/v2/api-docs",
-            "/v3/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui",
-            "/swagger-ui.html",
-            "/swagger-ui/**",
-            "/webjars/**",
-            // -- authenticate
-            "/api/v1/auth/login",
-            //old api
-            "/movies",
-            "/movies/*",
-            "/genre",
-            "/"
-    };
+
 }

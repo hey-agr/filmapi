@@ -1,6 +1,5 @@
 package ru.agr.filmscontent.filmapi.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;

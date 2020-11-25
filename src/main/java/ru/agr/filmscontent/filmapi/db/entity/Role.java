@@ -4,7 +4,6 @@ import lombok.*;
 import ru.agr.filmscontent.filmapi.db.meta.FilmApiMetaUtils;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 /**
