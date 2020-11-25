@@ -1,4 +1,4 @@
-package ru.agr.filmscontent.filmapi.controller.dto;
+package ru.agr.filmscontent.filmapi.controller.dto.genre;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

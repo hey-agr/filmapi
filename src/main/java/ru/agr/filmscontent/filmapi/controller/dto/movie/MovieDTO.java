@@ -1,4 +1,4 @@
-package ru.agr.filmscontent.filmapi.controller.dto;
+package ru.agr.filmscontent.filmapi.controller.dto.movie;
 
 
 import lombok.AllArgsConstructor;

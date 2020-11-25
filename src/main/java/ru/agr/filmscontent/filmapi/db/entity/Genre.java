@@ -6,10 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import ru.agr.filmscontent.filmapi.db.meta.FilmApiMetaUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Genre entity layer
@@ -24,6 +21,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = false)
 public class Genre extends BaseEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = FilmApiMetaUtils.genre.fld.id)
     private Long id;
 

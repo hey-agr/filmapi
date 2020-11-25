@@ -96,4 +96,96 @@ public final class FilmApiMetaUtils {
             public static final String genre_id = "genre_id";
         }
     }
+
+    /**
+     * Table user
+     */
+    public static final class user {
+        public static final String name = "user";
+
+        public static final class fld {
+            /**
+             * ID
+             */
+            public static final String id = "id";
+            /**
+             * User name
+             */
+            public static final String username = "username";
+            /**
+             * Password
+             */
+            public static final String password = "password";
+            /**
+             * Account date created
+             */
+            public static final String date_created = "date_created";
+            /**
+             * Account blocked
+             */
+            public static final String blocked = "blocked";
+        }
+    }
+
+    /**
+     * Table role
+     */
+    public static final class role {
+        public static final String name = "role";
+
+        public static final class fld {
+            /**
+             * ID
+             */
+            public static final String id = "id";
+            /**
+             * Name
+             */
+            public static final String name = "name";
+            /**
+             * Description
+             */
+            public static final String description = "description";
+        }
+    }
+
+    /**
+     * Table user_role
+     */
+    public static final class user_role {
+        public static final String name = "user_role";
+
+        public static final class fld {
+            /**
+             * User ID
+             */
+            public static final String user_id = "user_id";
+            /**
+             * Role ID
+             */
+            public static final String role_id = "role_id";
+        }
+    }
+
+    /**
+     * Table role_permission
+     */
+    public static final class role_permission {
+        public static final String name = "role_permission";
+
+        public static final class fld {
+            /**
+             * ID
+             */
+            public static final String id = "id";
+            /**
+             * Permission system name
+             */
+            public static final String authority = "authority";
+            /**
+             * Role ID
+             */
+            public static final String role_id = "role_id";
+        }
+    }
 }

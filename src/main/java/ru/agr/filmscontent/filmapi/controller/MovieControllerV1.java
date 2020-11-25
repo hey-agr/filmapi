@@ -8,72 +8,60 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.agr.filmscontent.filmapi.controller.dto.DtoConverter;
-import ru.agr.filmscontent.filmapi.controller.dto.genre.GenreItem;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieItem;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MoviesPageDTO;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
-import ru.agr.filmscontent.filmapi.service.GenreService;
+import ru.agr.filmscontent.filmapi.db.entity.RolePermission;
+import ru.agr.filmscontent.filmapi.service.AuthenticationService;
 import ru.agr.filmscontent.filmapi.service.MovieService;
-import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.created;
 
 /**
- * Movie REST controller
+ * Movie REST controller v1
  *
  * @author Arslan Rabadanov
  */
-@RestController
 @Slf4j
-public class MovieController {
+@RestController
+@RequestMapping("/api/v1/movies")
+public class MovieControllerV1 {
 
     private final MovieService movieService;
 
-    private final GenreService genreService;
+    private final AuthenticationService authenticationService;
 
     private final DtoConverter dtoConverter;
 
+
     @Autowired
-    public MovieController(MovieService movieService,
-                           GenreService genreService,
-                           DtoConverter dtoConverter) {
+    public MovieControllerV1(MovieService movieService,
+                             AuthenticationService authenticationService,
+                             DtoConverter dtoConverter) {
         this.movieService = movieService;
-        this.genreService = genreService;
+        this.authenticationService = authenticationService;
         this.dtoConverter = dtoConverter;
     }
 
-    @ApiIgnore
-    @GetMapping("/")
-    @ResponseBody
-    public String home() {
-        return "Hello, it,s FilmApiApplication, made by Arslan Rabadanov!";
-    }
-
-    @GetMapping("movies")
+    @GetMapping("")
     public MovieDTO findAll() {
-        log.info("Find all movies");
-        List<Movie> movies = movieService.getAll();
-        return dtoConverter.getMovieDTO(movies);
+        log.debug("Find all movies");
+        return dtoConverter.getMovieDTO(movieService.getAll());
     }
 
-    @GetMapping("genre")
-    public List<GenreItem> findAllGenre() {
-        log.info("Find all genre");
-        List<GenreItem> genres = genreService.getAll().stream()
-                .map(genre -> new GenreItem(genre.getName()))
-                .collect(Collectors.toList());
-        return genres;
-    }
-
-    @RequestMapping(value = "movies/page={pageNum}/size={pageSize}", method = RequestMethod.GET)
-    public MoviesPageDTO findAllPageable(@PathVariable(value="pageNum") Integer pageNum,
-                                         @PathVariable(value="pageSize") Integer pageSize) {
-        log.info("Find all movies pageable");
+    @GetMapping("/pageable")
+    public MoviesPageDTO findAllPageable(@RequestParam(value="pageNum") Integer pageNum,
+                                         @RequestParam(value="pageSize") Integer pageSize) {
+        log.debug("Find all movies pageable");
         Page<Movie> moviesPage = movieService.getAll(PageRequest.of(pageNum-1, pageSize));
 
         return new MoviesPageDTO(pageNum,
@@ -85,9 +73,9 @@ public class MovieController {
                 dtoConverter.getMovieItems(moviesPage.getContent()));
     }
 
-    @GetMapping("movies/find")
-    public MovieDTO findByTitle(@RequestParam(value = "title") String title) {
-        log.info("Find all movies by title: " + title);
+    @GetMapping("/title={title}")
+    public MovieDTO findByTitle(@PathVariable(value = "title") String title) {
+        log.debug("Find all movies by title: " + title);
         if (title == null) {
             return new MovieDTO(new ArrayList<>(), 0L, false);
         }
@@ -97,9 +85,9 @@ public class MovieController {
         return dtoConverter.getMovieDTO(movies);
     }
 
-    @GetMapping("movies/find/{id}")
-    public ResponseEntity<MovieDTO> findById(@RequestParam(value = "id") long id) {
-        log.info("Find movie by id: " + id);
+    @GetMapping("/{id}")
+    public ResponseEntity<MovieDTO> findById(@PathVariable(value = "id") long id) {
+        log.debug("Find movie by id: " + id);
         Movie currentMovie = movieService.getById(id);
         if (currentMovie == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -108,11 +96,11 @@ public class MovieController {
         return new ResponseEntity<>(dtoConverter.getMovieDTO(Collections.singletonList(currentMovie)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "movies/page={pageNum}/size={pageSize}/find", method = RequestMethod.GET)
+    @GetMapping("/pageable/pageNum={pageNum}&pageSize={pageSize}&title={title}")
     public MoviesPageDTO findByTitlePageable(@PathVariable(value="pageNum") Integer pageNum,
                                              @PathVariable(value="pageSize") Integer pageSize,
-                                             @RequestParam(value = "title") String title) {
-        log.info("Find all movies pageable by title: " + title);
+                                             @PathVariable(value = "title") String title) {
+        log.debug("Find all movies pageable by title: " + title);
         if (title == null) {
             return new MoviesPageDTO(pageNum,
                     0,
@@ -135,22 +123,40 @@ public class MovieController {
     }
 
     @Transactional
-    @RequestMapping(value = "movies/create", method = RequestMethod.POST)
-    public ResponseEntity<MovieDTO> create(@RequestBody MovieItem movieItem) {
-        log.info("Create new movie: " + movieItem);
+    @PostMapping()
+    public ResponseEntity<?> create(@RequestBody MovieItem movieItem,
+                                    HttpServletRequest request) {
+        log.debug("Create new movie: " + movieItem);
+        if (!authenticationService.hasAuthority(request, RolePermission.Authority.ADD_EDIT_MOVIE)) {
+            return authenticationService.authorityException(RolePermission.Authority.ADD_EDIT_MOVIE);
+        }
+
         try {
             Movie movieSaved = movieService.save(dtoConverter.convertMovieItemToMovie(movieItem));
-            return new ResponseEntity<>(dtoConverter.getMovieDTO(Collections.singletonList(movieSaved)), HttpStatus.CREATED);
+            return created(
+                    ServletUriComponentsBuilder
+                            .fromContextPath(request)
+                            .path("/api/v1/movie/{id}")
+                            .buildAndExpand(movieSaved.getId())
+                            .toUri())
+                    .build();
         } catch (Exception e) {
-            log.error("Error create movie: " + movieItem, e);
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            String errorMessage = "Error during creation movie: " + e.getMessage();
+            log.error(errorMessage, e);
+            return badRequest().body(errorMessage);
         }
     }
 
     @Transactional
-    @RequestMapping(value = "movies/update/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<MovieDTO> update(@PathVariable long id, @RequestBody MovieItem movieItem) {
-        log.info("Update movie: " + movieItem);
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> update(@PathVariable long id,
+                                    @RequestBody MovieItem movieItem,
+                                    HttpServletRequest request) {
+        log.debug("Update movie: " + movieItem);
+        if (!authenticationService.hasAuthority(request, RolePermission.Authority.ADD_EDIT_MOVIE)) {
+            return authenticationService.authorityException(RolePermission.Authority.ADD_EDIT_MOVIE);
+        }
+
         Movie currentMovie = movieService.getById(id);
         if (currentMovie == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -161,9 +167,14 @@ public class MovieController {
         return new ResponseEntity<>(dtoConverter.getMovieDTO(Collections.singletonList(movieService.save(currentMovie))), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "movies/delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
-        log.info("Delete movie with id: " + id);
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") long id,
+                                       HttpServletRequest request) {
+        log.debug("Delete movie with id: " + id);
+        if (!authenticationService.hasAuthority(request, RolePermission.Authority.DELETE_MOVIE)) {
+            return authenticationService.authorityException(RolePermission.Authority.DELETE_MOVIE);
+        }
+
         Movie movie = movieService.getById(id);
         if (movie == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -172,5 +183,4 @@ public class MovieController {
         movieService.delete(movie);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

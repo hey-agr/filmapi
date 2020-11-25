@@ -1,9 +1,10 @@
-package ru.agr.filmscontent.filmapi.controller.dto;
+package ru.agr.filmscontent.filmapi.controller.dto.movie;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ru.agr.filmscontent.filmapi.controller.dto.genre.GenreItem;
 
 import java.io.Serializable;
 import java.util.List;
