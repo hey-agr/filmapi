@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/genre")
+@RequestMapping("/api/v1/genres")
 public class GenreControllerV1 {
 
     private final GenreService genreService;
@@ -28,8 +28,8 @@ public class GenreControllerV1 {
         this.genreService = genreService;
     }
 
-    @GetMapping("genres")
-    public List<GenreItem> findAllGenre() {
+    @GetMapping
+    public List<GenreItem> findAllGenres() {
         log.debug("Find all genre");
         return genreService.getAll().stream()
                 .map(genre -> new GenreItem(genre.getName()))

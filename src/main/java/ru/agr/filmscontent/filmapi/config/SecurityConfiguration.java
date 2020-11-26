@@ -44,7 +44,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] WHITELIST_GET = {
-            "/api/v1/movies/**"
+            "/api/v1/movies/**",
+            "/api/v1/genres",
+            "/api/v1/genres/**"
     };
 
     private final JwtTokenProvider jwtTokenProvider;
