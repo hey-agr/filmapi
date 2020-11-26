@@ -135,9 +135,6 @@ public class MovieControllerV1 {
     public ResponseEntity<?> create(@RequestBody MovieItem movieItem,
                                     HttpServletRequest request) {
         log.debug("Create new movie: " + movieItem);
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.ADD_EDIT_MOVIE)) {
-            return authenticationService.authorityException(RolePermission.Authority.ADD_EDIT_MOVIE);
-        }
 
         try {
             Movie movieSaved = movieService.save(dtoConverter.convertMovieItemToMovie(movieItem));
@@ -161,9 +158,6 @@ public class MovieControllerV1 {
                                     @RequestBody MovieItem movieItem,
                                     HttpServletRequest request) {
         log.debug("Update movie: " + movieItem);
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.ADD_EDIT_MOVIE)) {
-            return authenticationService.authorityException(RolePermission.Authority.ADD_EDIT_MOVIE);
-        }
 
         Movie currentMovie = movieService.getById(id);
         if (currentMovie == null) {
@@ -179,9 +173,6 @@ public class MovieControllerV1 {
     public ResponseEntity<?> delete(@PathVariable("id") long id,
                                        HttpServletRequest request) {
         log.debug("Delete movie with id: " + id);
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.DELETE_MOVIE)) {
-            return authenticationService.authorityException(RolePermission.Authority.DELETE_MOVIE);
-        }
 
         Movie movie = movieService.getById(id);
         if (movie == null) {

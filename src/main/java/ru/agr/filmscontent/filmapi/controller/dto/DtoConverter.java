@@ -46,6 +46,13 @@ public class DtoConverter {
                 .dateCreated(user.getDateCreated())
                 .roles(user.getRoles().stream()
                         .map(this::convertRoleToDTO).collect(Collectors.toSet()))
+                .name(user.getName())
+                .lastName(user.getLastName())
+                .middleName(user.getMiddleName())
+                .gender(user.getGender())
+                .email(user.getEmail())
+                .avatarFilename(user.getAvatarFilename())
+                .theme(user.getTheme())
                 .build();
     }
 

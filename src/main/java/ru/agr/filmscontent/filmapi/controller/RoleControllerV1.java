@@ -36,18 +36,14 @@ public class RoleControllerV1 {
 
     private final RoleService roleService;
 
-    private final AuthenticationService authenticationService;
-
     private final DtoConverter dtoConverter;
 
     private final RolePermissionService rolePermissionService;
 
     public RoleControllerV1(RoleService roleService,
-                            AuthenticationService authenticationService,
                             RolePermissionService rolePermissionService,
                             DtoConverter dtoConverter) {
         this.roleService = roleService;
-        this.authenticationService = authenticationService;
         this.dtoConverter = dtoConverter;
         this.rolePermissionService = rolePermissionService;
     }
@@ -55,9 +51,7 @@ public class RoleControllerV1 {
     @GetMapping("")
     public ResponseEntity<?> getAll(HttpServletRequest request) {
         log.debug("Find all roles");
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.USER_ADMIN)) {
-            return authenticationService.authorityException(RolePermission.Authority.USER_ADMIN);
-        }
+
         return ok(
                 roleService.getAll().stream()
                         .map(dtoConverter::convertRoleToDTO)
@@ -68,9 +62,7 @@ public class RoleControllerV1 {
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable("id") Long id, HttpServletRequest request) {
         log.debug("Find role by id = " + id);
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.USER_ADMIN)) {
-            return authenticationService.authorityException(RolePermission.Authority.USER_ADMIN);
-        }
+
         Role role = roleService.findById(id).orElseThrow(() -> new EntityNotFoundException("Role with id = " + id + " not found!"));
         return ok(dtoConverter.convertRoleToDTO(role));
     }
@@ -79,9 +71,6 @@ public class RoleControllerV1 {
     @PostMapping("")
     public ResponseEntity<?> save(@RequestBody RoleForm form, HttpServletRequest request) {
         log.debug("Save role");
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.USER_ADMIN)) {
-            return authenticationService.authorityException(RolePermission.Authority.USER_ADMIN);
-        }
 
         final Role newRole = Role.builder()
                 .name(form.getName())
@@ -112,9 +101,6 @@ public class RoleControllerV1 {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody RoleForm form, HttpServletRequest request) {
         log.debug("Update role with id = " + id);
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.USER_ADMIN)) {
-            return authenticationService.authorityException(RolePermission.Authority.USER_ADMIN);
-        }
 
         final Role role = roleService.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Role with id = " + id + " not found!"));
@@ -145,9 +131,7 @@ public class RoleControllerV1 {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id, HttpServletRequest request) {
         log.debug("Delete role by id = " + id);
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.USER_ADMIN)) {
-            return authenticationService.authorityException(RolePermission.Authority.USER_ADMIN);
-        }
+
         Role role = roleService.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Role with id = " + id + " not found!"));
         roleService.delete(role);

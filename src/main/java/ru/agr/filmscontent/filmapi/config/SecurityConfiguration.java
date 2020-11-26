@@ -11,6 +11,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import ru.agr.filmscontent.filmapi.controller.exception.FilterChainExceptionHandler;
+import ru.agr.filmscontent.filmapi.db.entity.RolePermission;
 import ru.agr.filmscontent.filmapi.security.jwt.JwtSecurityConfigurer;
 import ru.agr.filmscontent.filmapi.security.jwt.JwtTokenProvider;
 
@@ -49,6 +50,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/api/v1/genres/**"
     };
 
+    private static final String[] WHITELIST_POST = {
+            "/api/v1/users/register"
+    };
+
     private final JwtTokenProvider jwtTokenProvider;
 
     private final FilterChainExceptionHandler filterChainExceptionHandler;
@@ -81,6 +86,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(WHITELIST).permitAll()
                 .antMatchers(HttpMethod.GET, WHITELIST_GET).permitAll()
+                .antMatchers(HttpMethod.POST, WHITELIST_POST).permitAll()
+                .antMatchers( "/api/v1/users/current").authenticated()
+                .antMatchers( "/api/v1/users/**", "/api/v1/roles/**").hasAuthority(RolePermission.Authority.USER_ADMIN.name())
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtSecurityConfigurer(jwtTokenProvider));

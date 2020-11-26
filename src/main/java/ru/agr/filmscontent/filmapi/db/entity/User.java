@@ -12,16 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.agr.filmscontent.filmapi.db.meta.FilmApiMetaUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -69,6 +60,31 @@ public class User extends BaseEntity implements UserDetails {
             inverseJoinColumns = {@JoinColumn(name = FilmApiMetaUtils.user_role.fld.role_id, referencedColumnName = FilmApiMetaUtils.role.fld.id)})
     private Set<Role> roles;
 
+    @Column(name = FilmApiMetaUtils.user.fld.name)
+    private String name;
+
+    @Column(name = FilmApiMetaUtils.user.fld.last_name)
+    private String lastName;
+
+    @Column(name = FilmApiMetaUtils.user.fld.middle_name)
+    private String middleName;
+
+    @Column(name = FilmApiMetaUtils.user.fld.avatar_data)
+    private String avatarData;
+
+    @Column(name = FilmApiMetaUtils.user.fld.avatar_filename)
+    private String avatarFilename;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = FilmApiMetaUtils.user.fld.gender)
+    private Gender gender;
+
+    @Column(name = FilmApiMetaUtils.user.fld.email)
+    private String email;
+
+    @Column(name = FilmApiMetaUtils.user.fld.theme)
+    private String theme;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (Hibernate.isInitialized(roles)) {
@@ -76,7 +92,7 @@ public class User extends BaseEntity implements UserDetails {
                     .flatMap(role -> role.getRolePermissions().stream())
                     .distinct()
                     .map(rolePermission -> new SimpleGrantedAuthority(rolePermission.getAuthority().name()))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
         }
         return null;
     }
@@ -99,5 +115,10 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public enum Gender {
+        MAN,
+        WOMAN;
     }
 }

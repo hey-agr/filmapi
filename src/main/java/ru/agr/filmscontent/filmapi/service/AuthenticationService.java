@@ -28,21 +28,6 @@ public class AuthenticationService {
         this.userService = userService;
     }
 
-    public boolean hasAuthority(@NotNull String token, @NotNull RolePermission.Authority authority) {
-        User user = getUser(token);
-        return hasAuthority(user, authority);
-    }
-
-    public boolean hasAuthority(@NotNull User user, @NotNull RolePermission.Authority authority) {
-        return user.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(authority.name()));
-    }
-
-    public boolean hasAuthority(HttpServletRequest request, @NotNull RolePermission.Authority authority) {
-        String token = jwtTokenProvider.resolveToken(request);
-        return hasAuthority(token, authority);
-    }
-
     public User getUser(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
         return getUser(token);
@@ -53,8 +38,4 @@ public class AuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException("Can't find user by token"));
     }
 
-    public ResponseEntity<?> authorityException(RolePermission.Authority authority) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body("User doesn't have authority: " + authority);
-    }
 }

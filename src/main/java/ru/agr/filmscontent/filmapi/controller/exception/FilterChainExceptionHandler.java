@@ -1,6 +1,5 @@
 package ru.agr.filmscontent.filmapi.controller.exception;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -10,7 +9,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Slf4j
 @Component
 public class FilterChainExceptionHandler extends OncePerRequestFilter {
 
@@ -28,7 +26,6 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            log.error("Spring Security Filter Chain Exception:", e);
             resolver.resolveException(request, response, null, e);
         }
     }

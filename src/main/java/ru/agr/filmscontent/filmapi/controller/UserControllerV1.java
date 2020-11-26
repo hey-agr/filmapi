@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.agr.filmscontent.filmapi.controller.dto.DtoConverter;
+import ru.agr.filmscontent.filmapi.controller.dto.user.UseRegistrationForm;
 import ru.agr.filmscontent.filmapi.controller.dto.user.UserBaseForm;
 import ru.agr.filmscontent.filmapi.controller.dto.user.UserDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.user.UserForm;
@@ -65,9 +66,6 @@ public class UserControllerV1 {
     @GetMapping("")
     public ResponseEntity<?> getAll(HttpServletRequest request) {
         log.debug("Find all users");
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.USER_ADMIN)) {
-            return authenticationService.authorityException(RolePermission.Authority.USER_ADMIN);
-        }
         return ok(
                 userService.getAll().stream()
                         .map(dtoConverter::convertUserToDTO)
@@ -78,9 +76,6 @@ public class UserControllerV1 {
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable("id") Long id, HttpServletRequest request) {
         log.debug("Find user by id = " + id);
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.USER_ADMIN)) {
-            return authenticationService.authorityException(RolePermission.Authority.USER_ADMIN);
-        }
         User user = userService.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id = " + id + " not found!"));
         return ok(dtoConverter.convertUserToDTO(user));
     }
@@ -88,9 +83,6 @@ public class UserControllerV1 {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id, HttpServletRequest request) {
         log.debug("Delete user by id");
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.USER_ADMIN)) {
-            return authenticationService.authorityException(RolePermission.Authority.USER_ADMIN);
-        }
         User user = userService.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User with id = " + id + " not found!"));
         userService.delete(user);
@@ -100,15 +92,17 @@ public class UserControllerV1 {
     @PostMapping("")
     public ResponseEntity<?> save(@RequestBody UserForm form, HttpServletRequest request) {
         log.debug("Save user");
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.USER_ADMIN)) {
-            return authenticationService.authorityException(RolePermission.Authority.USER_ADMIN);
-        }
-
         User newUser = User.builder()
                 .blocked(false)
                 .dateCreated(LocalDateTime.now())
                 .username(form.getUsername())
                 .password(form.getPassword())
+                .name(form.getName())
+                .lastName(form.getLastName())
+                .middleName(form.getMiddleName())
+                .gender(form.getGender())
+                .email(form.getEmail())
+                .theme(form.getTheme())
                 .build();
 
         Set<Role> roles = dtoConverter.convertRoleDataToRoles(form.getRoles());
@@ -132,13 +126,17 @@ public class UserControllerV1 {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody UserBaseForm form, HttpServletRequest request) {
         log.debug("Update user with id = " + id);
-        if (!authenticationService.hasAuthority(request, RolePermission.Authority.USER_ADMIN)) {
-            return authenticationService.authorityException(RolePermission.Authority.USER_ADMIN);
-        }
+
         User user = userService.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User with id = " + id + " not found!"));
         user.setUsername(form.getUsername());
         user.setBlocked(form.getBlocked());
+        user.setName(form.getName());
+        user.setLastName(form.getLastName());
+        user.setMiddleName(form.getMiddleName());
+        user.setGender(form.getGender());
+        user.setEmail(form.getEmail());
+        user.setTheme(form.getTheme());
 
         Set<Role> roles = dtoConverter.convertRoleDataToRoles(form.getRoles());
 
@@ -154,6 +152,31 @@ public class UserControllerV1 {
                         .fromContextPath(request)
                         .path("/api/v1/users/{id}")
                         .buildAndExpand(user.getId())
+                        .toUri())
+                .build();
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody UseRegistrationForm form, HttpServletRequest request) {
+        log.debug("Register new user");
+        User newUser = User.builder()
+                .blocked(false)
+                .dateCreated(LocalDateTime.now())
+                .username(form.getUsername())
+                .password(form.getPassword())
+                .name(form.getName())
+                .lastName(form.getLastName())
+                .middleName(form.getMiddleName())
+                .gender(form.getGender())
+                .email(form.getEmail())
+                .theme(form.getTheme())
+                .build();
+
+        return created(
+                ServletUriComponentsBuilder
+                        .fromContextPath(request)
+                        .path("/api/v1/users/{id}")
+                        .buildAndExpand(userService.save(newUser).getId())
                         .toUri())
                 .build();
     }

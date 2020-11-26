@@ -37,7 +37,11 @@ import static java.util.Collections.singletonList;
  */
 @EnableJpaRepositories(basePackages = "ru.agr.filmscontent.filmapi.db.repository")
 @EntityScan(basePackages = "ru.agr.filmscontent.filmapi.db.entity")
-@ComponentScan(basePackages = {"ru.agr.filmscontent.filmapi.service","ru.agr.filmscontent.filmapi.controller"})
+@ComponentScan(basePackages = {
+        "ru.agr.filmscontent.filmapi.service",
+        "ru.agr.filmscontent.filmapi.controller",
+        "ru.agr.filmscontent.filmapi.security"
+})
 @EnableSwagger2
 @Configuration
 public class FilmApiConfiguration {

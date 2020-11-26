@@ -16,34 +16,49 @@ public class RestExceptionHandler {
     @ExceptionHandler(value = {InvalidJwtAuthenticationException.class})
     public ResponseEntity<ErrorMessage> invalidJwtAuthentication(InvalidJwtAuthenticationException e,
                                                       WebRequest request) {
+        HttpStatus httpStatus =  HttpStatus.UNAUTHORIZED;
+
         ErrorMessage errorMessage = ErrorMessage.builder()
                 .timestamp(LocalDateTime.now())
                 .message(e.getMessage())
+                .status(httpStatus.value())
+                .error(httpStatus.getReasonPhrase())
+                .path(request.getContextPath())
                 .build();
 
-        return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorMessage, httpStatus);
     }
 
     @ExceptionHandler(value = {EntityNotFoundException.class})
     public ResponseEntity<ErrorMessage> invalidJwtAuthentication(EntityNotFoundException e,
                                                                  WebRequest request) {
+        HttpStatus httpStatus =  HttpStatus.BAD_REQUEST;
+
         ErrorMessage errorMessage = ErrorMessage.builder()
                 .timestamp(LocalDateTime.now())
                 .message(e.getMessage())
+                .status(httpStatus.value())
+                .error(httpStatus.getReasonPhrase())
+                .path(request.getContextPath())
                 .build();
 
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorMessage, httpStatus);
     }
 
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<ErrorMessage> invalidJwtAuthentication(Exception e,
                                                                  WebRequest request) {
+        HttpStatus httpStatus =  HttpStatus.BAD_REQUEST;
+
         ErrorMessage errorMessage = ErrorMessage.builder()
                 .timestamp(LocalDateTime.now())
                 .message(e.getMessage())
+                .status(httpStatus.value())
+                .error(httpStatus.getReasonPhrase())
+                .path(request.getContextPath())
                 .build();
 
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorMessage, httpStatus);
     }
 
 }

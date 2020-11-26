@@ -109,7 +109,7 @@ public final class FilmApiMetaUtils {
              */
             public static final String id = "id";
             /**
-             * User name
+             * Username
              */
             public static final String username = "username";
             /**
@@ -124,6 +124,38 @@ public final class FilmApiMetaUtils {
              * Account blocked
              */
             public static final String blocked = "blocked";
+            /**
+             * name
+             */
+            public static final String name = "name";
+            /**
+             * last name
+             */
+            public static final String last_name = "last_name";
+            /**
+             * middle name
+             */
+            public static final String middle_name = "middle_name";
+            /**
+             * avatar image data
+             */
+            public static final String avatar_data = "avatar_data";
+            /**
+             * avatar image filename
+             */
+            public static final String avatar_filename = "avatar_filename";
+            /**
+             * Gender
+             */
+            public static final String gender = "gender";
+            /**
+             * E-Mail
+             */
+            public static final String email = "email";
+            /**
+             * Theme
+             */
+            public static final String theme = "theme";
         }
     }
 
