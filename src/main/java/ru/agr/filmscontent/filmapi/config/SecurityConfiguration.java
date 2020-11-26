@@ -37,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/api/v1/auth/login",
             //old api
             "/movies",
-            "/movies/*",
+            "/movies/**",
             "/genre",
             "/"
     };
