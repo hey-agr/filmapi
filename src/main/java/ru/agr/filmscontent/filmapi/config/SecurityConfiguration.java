@@ -2,6 +2,7 @@ package ru.agr.filmscontent.filmapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -42,6 +43,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/"
     };
 
+    private static final String[] WHITELIST_GET = {
+            "/api/v1/movies/**"
+    };
+
     private final JwtTokenProvider jwtTokenProvider;
 
     private final FilterChainExceptionHandler filterChainExceptionHandler;
@@ -73,6 +78,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(WHITELIST).permitAll()
+                .antMatchers(HttpMethod.GET, WHITELIST_GET).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtSecurityConfigurer(jwtTokenProvider));
