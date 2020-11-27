@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.agr.filmscontent.filmapi.db.entity.User;
-import ru.agr.filmscontent.filmapi.db.meta.FilmApiMetaUtils;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.List;
 

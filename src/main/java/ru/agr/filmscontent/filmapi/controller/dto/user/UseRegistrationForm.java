@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import ru.agr.filmscontent.filmapi.db.entity.User;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Data
 @Builder

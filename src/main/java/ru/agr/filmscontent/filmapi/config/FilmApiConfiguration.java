@@ -82,6 +82,7 @@ public class FilmApiConfiguration {
                         .allowedMethods("*")
                         .allowedOrigins("*")
                         .allowedHeaders("*")
+                        .allowCredentials(true)
                         .maxAge(3600);
             }
         };

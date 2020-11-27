@@ -16,7 +16,6 @@ import ru.agr.filmscontent.filmapi.controller.dto.DtoConverter;
 import ru.agr.filmscontent.filmapi.controller.dto.user.RoleForm;
 import ru.agr.filmscontent.filmapi.db.entity.Role;
 import ru.agr.filmscontent.filmapi.db.entity.RolePermission;
-import ru.agr.filmscontent.filmapi.service.AuthenticationService;
 import ru.agr.filmscontent.filmapi.service.RolePermissionService;
 import ru.agr.filmscontent.filmapi.service.RoleService;
 
@@ -25,9 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.ResponseEntity.created;
-import static org.springframework.http.ResponseEntity.noContent;
-import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.*;
 
 @Slf4j
 @RestController

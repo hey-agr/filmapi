@@ -22,7 +22,6 @@ import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieItem;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MoviesPageDTO;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
-import ru.agr.filmscontent.filmapi.db.entity.RolePermission;
 import ru.agr.filmscontent.filmapi.service.AuthenticationService;
 import ru.agr.filmscontent.filmapi.service.MovieService;
 

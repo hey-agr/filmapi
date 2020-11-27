@@ -17,7 +17,6 @@ import ru.agr.filmscontent.filmapi.controller.dto.user.UserBaseForm;
 import ru.agr.filmscontent.filmapi.controller.dto.user.UserDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.user.UserForm;
 import ru.agr.filmscontent.filmapi.db.entity.Role;
-import ru.agr.filmscontent.filmapi.db.entity.RolePermission;
 import ru.agr.filmscontent.filmapi.db.entity.User;
 import ru.agr.filmscontent.filmapi.service.AuthenticationService;
 import ru.agr.filmscontent.filmapi.service.UserService;
@@ -28,9 +27,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.ResponseEntity.created;
-import static org.springframework.http.ResponseEntity.noContent;
-import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.*;
 
 /**
  * User REST controller v1
