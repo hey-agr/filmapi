@@ -25,10 +25,13 @@ public class UserService {
     }
 
     public User save(User user) {
+        return userRepository.saveAndFlush(user);
+    }
+
+    public User register(User user) {
         if (passwordEncoder.upgradeEncoding(user.getPassword())){
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-
         return userRepository.saveAndFlush(user);
     }
 

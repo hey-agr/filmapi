@@ -109,7 +109,7 @@ public class UserControllerV1 {
         }
 
         newUser.setRoles(roles);
-        newUser = userService.save(newUser);
+        newUser = userService.register(newUser);
 
         return created(
                 ServletUriComponentsBuilder
@@ -173,7 +173,7 @@ public class UserControllerV1 {
                 ServletUriComponentsBuilder
                         .fromContextPath(request)
                         .path("/api/v1/users/{id}")
-                        .buildAndExpand(userService.save(newUser).getId())
+                        .buildAndExpand(userService.register(newUser).getId())
                         .toUri())
                 .build();
     }
