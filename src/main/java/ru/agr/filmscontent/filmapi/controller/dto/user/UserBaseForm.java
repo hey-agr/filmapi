@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import ru.agr.filmscontent.filmapi.db.entity.User;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldNameConstants(asEnum = true)
 public class UserBaseForm implements Serializable {
     @ApiModelProperty(value = "Username", position = 1)
     private String username;

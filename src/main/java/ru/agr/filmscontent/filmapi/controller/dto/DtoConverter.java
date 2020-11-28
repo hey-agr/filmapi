@@ -1,6 +1,7 @@
 package ru.agr.filmscontent.filmapi.controller.dto;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 import ru.agr.filmscontent.filmapi.controller.dto.genre.GenreItem;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieItem;
@@ -17,6 +18,7 @@ import ru.agr.filmscontent.filmapi.db.entity.User;
 import ru.agr.filmscontent.filmapi.service.GenreService;
 import ru.agr.filmscontent.filmapi.service.RoleService;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @Component
 public class DtoConverter {
@@ -99,22 +102,35 @@ public class DtoConverter {
         }
     }
 
-    public Movie convertMovieItemToMovie(MovieItem movieItem) {
-        return Movie.builder()
-                .country(movieItem.getCountry())
-                .description(movieItem.getDescription())
-                .imdbID(movieItem.getImdbID())
-                .type(Movie.MovieType.valueOf(movieItem.getType()))
-                .poster(movieItem.getPoster())
-                .title(movieItem.getTitle())
-                .titleEn(movieItem.getTitleEn())
-                .year(movieItem.getYear())
-                .video(movieItem.getVideo())
-                .genres(movieItem.getGenres().stream()
-                        .map(this::convertGenreItemToGenre)
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList()))
-                .build();
+    public <FC, SC> void fillOnlyNonNullFields(FC firstObject, SC secondObject, ReflectionUtils.FieldFilter fieldFilter) {
+        ReflectionUtils.doWithFields(firstObject.getClass(),
+                callback -> {
+                    callback.setAccessible(true);
+                    if (nonNull(callback.get(firstObject))) {
+                        Field secondObjectField = ReflectionUtils.findField(secondObject.getClass(), callback.getName());
+                        if (nonNull(secondObjectField)) {
+                            secondObjectField.setAccessible(true);
+                            ReflectionUtils.setField(secondObjectField, secondObject, callback.get(firstObject));
+                        } else {
+                            throw new IllegalArgumentException("Field " + callback.getName() + " doesn't exist!");
+                        }
+                    }
+                }, fieldFilter);
+    }
+
+    public Movie convertMovieItemToMovie(Movie movie, MovieItem movieItem) {
+        fillOnlyNonNullFields(movieItem, movie, field -> !field.getName().equals(Movie.Fields.genres));
+        if (nonNull(movieItem.getGenres())) {
+            movie.setGenres(movieItem.getGenres().stream()
+                    .map(this::convertGenreItemToGenre)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList())
+            );
+        }
+        if (isNull(movie.getGenres())) {
+            movie.setGenres(new ArrayList<>());
+        }
+        return movie;
     }
 
     public Genre convertGenreItemToGenre(GenreItem genreItem) {

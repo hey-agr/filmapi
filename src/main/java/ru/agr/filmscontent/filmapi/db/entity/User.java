@@ -1,19 +1,27 @@
 package ru.agr.filmscontent.filmapi.db.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.agr.filmscontent.filmapi.db.meta.FilmApiMetaUtils;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
@@ -24,13 +32,15 @@ import java.util.stream.Collectors;
  *
  * @author Arslan Rabadanov
  */
-@Entity
-@Table(schema = FilmApiMetaUtils.SCHEMA, name = FilmApiMetaUtils.user.name)
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldNameConstants
+@Entity
+@Table(schema = FilmApiMetaUtils.SCHEMA, name = FilmApiMetaUtils.user.name)
 public class User extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +59,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = FilmApiMetaUtils.user.fld.date_created)
     private LocalDateTime dateCreated;
 
+    @NotNull
     @Column(name = FilmApiMetaUtils.user.fld.blocked)
     private Boolean blocked;
 

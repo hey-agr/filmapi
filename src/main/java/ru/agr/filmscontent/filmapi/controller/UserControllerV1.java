@@ -2,14 +2,7 @@ package ru.agr.filmscontent.filmapi.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.agr.filmscontent.filmapi.controller.dto.DtoConverter;
 import ru.agr.filmscontent.filmapi.controller.dto.user.UseRegistrationForm;
@@ -27,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
 import static org.springframework.http.ResponseEntity.*;
 
 /**
@@ -124,25 +118,20 @@ public class UserControllerV1 {
     public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody UserBaseForm form, HttpServletRequest request) {
         log.debug("Update user with id = " + id);
 
-        User user = userService.findById(id)
+        final User user = userService.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User with id = " + id + " not found!"));
-        user.setUsername(form.getUsername());
-        user.setBlocked(form.getBlocked());
-        user.setName(form.getName());
-        user.setLastName(form.getLastName());
-        user.setMiddleName(form.getMiddleName());
-        user.setGender(form.getGender());
-        user.setEmail(form.getEmail());
-        user.setTheme(form.getTheme());
 
-        Set<Role> roles = dtoConverter.convertRoleDataToRoles(form.getRoles());
+        dtoConverter.fillOnlyNonNullFields(form, user, field -> !field.getName().equals(User.Fields.roles));
 
-        if (roles.isEmpty()) {
-            throw new EntityNotFoundException("User must have roles!");
+        if (nonNull(form.getRoles())) {
+            Set<Role> roles = dtoConverter.convertRoleDataToRoles(form.getRoles());
+            if (roles.isEmpty()) {
+                throw new EntityNotFoundException("User must have roles!");
+            }
+            user.setRoles(roles);
         }
 
-        user.setRoles(roles);
-        user = userService.save(user);
+        userService.save(user);
 
         return created(
                 ServletUriComponentsBuilder

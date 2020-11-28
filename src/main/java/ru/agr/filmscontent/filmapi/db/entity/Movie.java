@@ -1,25 +1,10 @@
 package ru.agr.filmscontent.filmapi.db.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldNameConstants;
 import ru.agr.filmscontent.filmapi.db.meta.FilmApiMetaUtils;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -27,9 +12,13 @@ import java.util.List;
  *
  * @author Arslan Rabadanov
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false) @Builder
+@FieldNameConstants
 @Entity
 @Table(schema = FilmApiMetaUtils.SCHEMA, name = FilmApiMetaUtils.movie.name)
-@Data @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode(callSuper = false) @Builder
 public class Movie extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +32,7 @@ public class Movie extends BaseEntity {
     private String titleEn;
 
     @Column(name = FilmApiMetaUtils.movie.fld.year)
-    private Short year;
+    private String year;
 
     @Column(name = FilmApiMetaUtils.movie.fld.imdbID)
     private String imdbID;

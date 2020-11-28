@@ -146,7 +146,7 @@ public class MovieController {
     public ResponseEntity<MovieDTO> create(@RequestBody MovieItem movieItem) {
         log.info("Create new movie: " + movieItem);
         try {
-            Movie movieSaved = movieService.save(dtoConverter.convertMovieItemToMovie(movieItem));
+            Movie movieSaved = movieService.save(dtoConverter.convertMovieItemToMovie(new Movie(), movieItem));
             return new ResponseEntity<>(dtoConverter.getMovieDTO(Collections.singletonList(movieSaved)), HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("Error create movie: " + movieItem, e);
@@ -163,7 +163,7 @@ public class MovieController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        currentMovie = dtoConverter.convertMovieItemToMovie(movieItem);
+        dtoConverter.convertMovieItemToMovie(currentMovie, movieItem);
         currentMovie.setId(id);
         return new ResponseEntity<>(dtoConverter.getMovieDTO(Collections.singletonList(movieService.save(currentMovie))), HttpStatus.OK);
     }

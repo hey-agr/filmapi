@@ -136,7 +136,7 @@ public class MovieControllerV1 {
         log.debug("Create new movie: " + movieItem);
 
         try {
-            Movie movieSaved = movieService.save(dtoConverter.convertMovieItemToMovie(movieItem));
+            Movie movieSaved = movieService.save(dtoConverter.convertMovieItemToMovie(new Movie(), movieItem));
             return created(
                     ServletUriComponentsBuilder
                             .fromContextPath(request)
@@ -163,9 +163,15 @@ public class MovieControllerV1 {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        currentMovie = dtoConverter.convertMovieItemToMovie(movieItem);
+        currentMovie = dtoConverter.convertMovieItemToMovie(currentMovie, movieItem);
         currentMovie.setId(id);
-        return new ResponseEntity<>(dtoConverter.getMovieDTO(Collections.singletonList(movieService.save(currentMovie))), HttpStatus.OK);
+        return created(
+                ServletUriComponentsBuilder
+                        .fromContextPath(request)
+                        .path("/api/v1/movie/{id}")
+                        .buildAndExpand(movieService.save(currentMovie).getId())
+                        .toUri())
+                .build();
     }
 
     @DeleteMapping(value = "/{id}")
