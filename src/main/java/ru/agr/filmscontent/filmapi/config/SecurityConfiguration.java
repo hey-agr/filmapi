@@ -46,6 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] WHITELIST_GET = {
+            "/api/v1/movies",
             "/api/v1/movies/**",
             "/api/v1/genres",
             "/api/v1/genres/**"
@@ -98,7 +99,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                //others if you need
                 .antMatchers(HttpMethod.OPTIONS, "/**");
     }
 }

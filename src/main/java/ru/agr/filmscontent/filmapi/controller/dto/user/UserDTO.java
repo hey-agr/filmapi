@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.agr.filmscontent.filmapi.controller.dto.role.RoleDTO;
 import ru.agr.filmscontent.filmapi.db.entity.User;
 
 import java.io.Serializable;

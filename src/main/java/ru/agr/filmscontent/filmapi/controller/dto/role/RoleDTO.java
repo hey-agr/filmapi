@@ -1,4 +1,4 @@
-package ru.agr.filmscontent.filmapi.controller.dto.user;
+package ru.agr.filmscontent.filmapi.controller.dto.role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
