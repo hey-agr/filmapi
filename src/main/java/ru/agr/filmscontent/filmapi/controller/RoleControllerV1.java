@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.agr.filmscontent.filmapi.controller.dto.DtoConverter;
-import ru.agr.filmscontent.filmapi.controller.dto.user.RoleForm;
+import ru.agr.filmscontent.filmapi.controller.dto.role.RoleForm;
 import ru.agr.filmscontent.filmapi.db.entity.Role;
 import ru.agr.filmscontent.filmapi.db.entity.RolePermission;
 import ru.agr.filmscontent.filmapi.service.RolePermissionService;

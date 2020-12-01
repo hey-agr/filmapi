@@ -7,19 +7,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.agr.filmscontent.filmapi.controller.dto.DtoConverter;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieDTO;
-import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieItem;
+import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieForm;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MoviesPageDTO;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
 import ru.agr.filmscontent.filmapi.service.AuthenticationService;
@@ -65,9 +57,9 @@ public class MovieControllerV1 {
         return dtoConverter.getMovieDTO(movieService.getAll());
     }
 
-    @GetMapping("/pageable")
-    public MoviesPageDTO findAllPageable(@RequestParam(value="pageNum") Integer pageNum,
-                                         @RequestParam(value="pageSize") Integer pageSize) {
+    @GetMapping("/pageable/?page={page}&size={size}")
+    public MoviesPageDTO findAllPageable(@PathVariable(value="page") Integer pageNum,
+                                         @PathVariable(value="size") Integer pageSize) {
         log.debug("Find all movies pageable");
         Page<Movie> moviesPage = movieService.getAll(PageRequest.of(pageNum-1, pageSize));
 
@@ -80,7 +72,7 @@ public class MovieControllerV1 {
                 dtoConverter.getMovieItems(moviesPage.getContent()));
     }
 
-    @GetMapping("/title={title}")
+    @GetMapping("/?title={title}")
     public MovieDTO findByTitle(@PathVariable(value = "title") String title) {
         log.debug("Find all movies by title: " + title);
         if (title == null) {
@@ -103,9 +95,9 @@ public class MovieControllerV1 {
         return new ResponseEntity<>(dtoConverter.getMovieDTO(Collections.singletonList(currentMovie)), HttpStatus.OK);
     }
 
-    @GetMapping("/pageable/pageNum={pageNum}&pageSize={pageSize}&title={title}")
-    public MoviesPageDTO findByTitlePageable(@PathVariable(value="pageNum") Integer pageNum,
-                                             @PathVariable(value="pageSize") Integer pageSize,
+    @GetMapping("/pageable/?page={page}&size={size}&title={title}")
+    public MoviesPageDTO findByTitlePageable(@PathVariable(value="page") Integer pageNum,
+                                             @PathVariable(value="size") Integer pageSize,
                                              @PathVariable(value = "title") String title) {
         log.debug("Find all movies pageable by title: " + title);
         if (title == null) {
@@ -131,12 +123,11 @@ public class MovieControllerV1 {
 
     @Transactional
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody MovieItem movieItem,
-                                    HttpServletRequest request) {
-        log.debug("Create new movie: " + movieItem);
+    public ResponseEntity<?> create(@RequestBody MovieForm movieForm, HttpServletRequest request) {
+        log.debug("Create new movie: " + movieForm);
 
         try {
-            Movie movieSaved = movieService.save(dtoConverter.convertMovieItemToMovie(new Movie(), movieItem));
+            Movie movieSaved = movieService.save(dtoConverter.convertMovieItemToMovie(new Movie(), movieForm));
             return created(
                     ServletUriComponentsBuilder
                             .fromContextPath(request)
@@ -153,17 +144,15 @@ public class MovieControllerV1 {
 
     @Transactional
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable long id,
-                                    @RequestBody MovieItem movieItem,
-                                    HttpServletRequest request) {
-        log.debug("Update movie: " + movieItem);
+    public ResponseEntity<?> update(@PathVariable long id, @RequestBody MovieForm movieForm, HttpServletRequest request) {
+        log.debug("Update movie: " + movieForm);
 
         Movie currentMovie = movieService.getById(id);
         if (currentMovie == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        currentMovie = dtoConverter.convertMovieItemToMovie(currentMovie, movieItem);
+        currentMovie = dtoConverter.convertMovieItemToMovie(currentMovie, movieForm);
         currentMovie.setId(id);
         return created(
                 ServletUriComponentsBuilder
@@ -175,8 +164,7 @@ public class MovieControllerV1 {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id,
-                                       HttpServletRequest request) {
+    public ResponseEntity<?> delete(@PathVariable("id") long id) {
         log.debug("Delete movie with id: " + id);
 
         Movie movie = movieService.getById(id);
