@@ -14,13 +14,10 @@ import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieForm;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MoviesPageDTO;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
-import ru.agr.filmscontent.filmapi.service.AuthenticationService;
 import ru.agr.filmscontent.filmapi.service.MovieService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.ResponseEntity.badRequest;
@@ -36,79 +33,36 @@ import static org.springframework.http.ResponseEntity.created;
 @RequestMapping("/api/v1/movies")
 public class MovieControllerV1 {
 
-    private final MovieService movieService;
+    private final static int DEFAULT_PAGE = 1;
 
-    private final AuthenticationService authenticationService;
+    private final static int DEFAULT_SIZE = 100;
+
+    private final MovieService movieService;
 
     private final DtoConverter dtoConverter;
 
-
     @Autowired
     public MovieControllerV1(MovieService movieService,
-                             AuthenticationService authenticationService,
                              DtoConverter dtoConverter) {
         this.movieService = movieService;
-        this.authenticationService = authenticationService;
         this.dtoConverter = dtoConverter;
     }
 
     @GetMapping
-    public MovieDTO findAll() {
+    public ResponseEntity<?> findAll(@RequestParam(value="page", required = false) Optional<Integer> page,
+                                            @RequestParam(value="size", required = false) Optional<Integer> size,
+                                            @RequestParam(value = "title", required = false) Optional<String> title) {
         log.debug("Find all movies");
-        return dtoConverter.getMovieDTO(movieService.getAll());
-    }
-
-    @GetMapping("/pageable/?page={page}&size={size}")
-    public MoviesPageDTO findAllPageable(@PathVariable(value="page") Integer pageNum,
-                                         @PathVariable(value="size") Integer pageSize) {
-        log.debug("Find all movies pageable");
-        Page<Movie> moviesPage = movieService.getAll(PageRequest.of(pageNum-1, pageSize));
-
-        return new MoviesPageDTO(pageNum,
-                moviesPage.getTotalPages(),
-                pageSize,
-                Integer.valueOf(moviesPage.getContent().size()).longValue(),
-                movieService.count(),
-                true,
-                dtoConverter.getMovieItems(moviesPage.getContent()));
-    }
-
-    @GetMapping("/title={title}")
-    public MovieDTO findByTitle(@PathVariable(value = "title") String title) {
-        log.debug("Find all movies by title: " + title);
-        if (title == null) {
-            return new MovieDTO(new ArrayList<>(), 0L, false);
+        MovieDTO movieDTO;
+        if (page.isPresent() || size.isPresent()) {
+            movieDTO = findPageable(page.orElse(DEFAULT_PAGE), size.orElse(DEFAULT_SIZE), title);
+        } else if (title.isPresent()) {
+            movieDTO = dtoConverter.getMovieDTO(movieService.getByTitle(title.get()));
+        } else {
+            movieDTO = dtoConverter.getMovieDTO(movieService.getAll());
         }
 
-        List<Movie> movies = movieService.getByTitle(title);
-
-        return dtoConverter.getMovieDTO(movies);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<MovieDTO> findById(@PathVariable(value = "id") long id) {
-        log.debug("Find movie by id: " + id);
-        Movie currentMovie = movieService.getById(id);
-        if (currentMovie == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(dtoConverter.getMovieDTO(Collections.singletonList(currentMovie)), HttpStatus.OK);
-    }
-
-    @GetMapping("pageable/{page}/{size}")
-    public MoviesPageDTO findAllPageable(@PathVariable(value="page") Integer page,
-                                         @PathVariable(value="size") Integer size) {
-        log.debug("Find all movies pageable");
-        return findPageable(page, size, Optional.of(""));
-    }
-
-    @GetMapping("pageable/{page}/{size}/title={title}")
-    public MoviesPageDTO findAllPageableByTitle(@PathVariable(value="page") Integer page,
-                                         @PathVariable(value="size") Integer size,
-                                         @PathVariable(value = "title") String title) {
-        log.debug("Find all movies pageable by title: " + title);
-        return findPageable(page, size, Optional.of(title));
+        return new ResponseEntity<>(movieDTO, HttpStatus.OK);
     }
 
     private MoviesPageDTO findPageable(Integer page, Integer size, Optional<String> title) {
@@ -129,6 +83,17 @@ public class MovieControllerV1 {
                 totalCount,
                 true,
                 dtoConverter.getMovieItems(moviesPage.getContent()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MovieDTO> findById(@PathVariable(value = "id") long id) {
+        log.debug("Find movie by id: " + id);
+        Movie currentMovie = movieService.getById(id);
+        if (currentMovie == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(dtoConverter.getMovieDTO(Collections.singletonList(currentMovie)), HttpStatus.OK);
     }
 
     @Transactional

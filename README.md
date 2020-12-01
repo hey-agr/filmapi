@@ -4,6 +4,6 @@ Simple REST API
 
 Spring Boot / Spring Data JPA / Spring Web / Spring Security / PostgreSQL / Swagger / Lombok
 
-https://film-api-backend.herokuapp.com/swagger-ui.html
+https://film-api-backend.herokuapp.com/swagger-ui/
 
 docker-compose up -d

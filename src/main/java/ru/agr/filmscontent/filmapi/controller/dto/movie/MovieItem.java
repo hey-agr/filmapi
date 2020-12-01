@@ -1,6 +1,8 @@
 package ru.agr.filmscontent.filmapi.controller.dto.movie;
 
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@ApiModel
 public class MovieItem implements Serializable {
     @ApiModelProperty(value = "ID", position = 1)
     private Long id;
