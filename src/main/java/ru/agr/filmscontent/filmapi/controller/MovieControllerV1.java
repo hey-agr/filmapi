@@ -58,7 +58,22 @@ public class MovieControllerV1 {
         return dtoConverter.getMovieDTO(movieService.getAll());
     }
 
-    @RequestMapping(value = "/title={title}", method = RequestMethod.GET)
+    @GetMapping("/pageable/?page={page}&size={size}")
+    public MoviesPageDTO findAllPageable(@PathVariable(value="page") Integer pageNum,
+                                         @PathVariable(value="size") Integer pageSize) {
+        log.debug("Find all movies pageable");
+        Page<Movie> moviesPage = movieService.getAll(PageRequest.of(pageNum-1, pageSize));
+
+        return new MoviesPageDTO(pageNum,
+                moviesPage.getTotalPages(),
+                pageSize,
+                Integer.valueOf(moviesPage.getContent().size()).longValue(),
+                movieService.count(),
+                true,
+                dtoConverter.getMovieItems(moviesPage.getContent()));
+    }
+
+    @GetMapping("/title={title}")
     public MovieDTO findByTitle(@PathVariable(value = "title") String title) {
         log.debug("Find all movies by title: " + title);
         if (title == null) {
