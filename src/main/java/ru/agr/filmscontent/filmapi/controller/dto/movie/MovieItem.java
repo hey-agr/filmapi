@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.agr.filmscontent.filmapi.controller.dto.genre.GenreItem;
+import ru.agr.filmscontent.filmapi.db.entity.Movie;
 
 import java.io.Serializable;
 import java.util.List;
@@ -28,7 +29,7 @@ public class MovieItem implements Serializable {
 
     private String imdbID;
 
-    private String type;
+    private Movie.MovieType type;
 
     private String poster;
 

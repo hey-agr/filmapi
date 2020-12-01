@@ -149,7 +149,7 @@ public class DtoConverter {
                                 movie.getTitleEn(),
                                 movie.getYear(),
                                 movie.getImdbID(),
-                                (movie.getType() != null) ? movie.getType().name() : "",
+                                movie.getType(),
                                 movie.getPoster(),
                                 movie.getDescription(),
                                 movie.getCountry(),
