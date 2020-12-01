@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class MovieItem implements Serializable {
-    private String id;
+    private Long id;
 
     private String title;
 

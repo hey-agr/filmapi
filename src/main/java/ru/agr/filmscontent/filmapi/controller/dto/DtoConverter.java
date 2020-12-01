@@ -144,7 +144,7 @@ public class DtoConverter {
     public List<MovieItem> getMovieItems(List<Movie> movies) {
         return movies.stream()
                 .map(movie ->
-                        new MovieItem(movie.getId().toString(),
+                        new MovieItem(movie.getId(),
                                 movie.getTitle(),
                                 movie.getTitleEn(),
                                 movie.getYear(),
