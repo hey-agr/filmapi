@@ -92,6 +92,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, WHITELIST_GET).permitAll()
                 .antMatchers(HttpMethod.POST, WHITELIST_POST).permitAll()
                 .antMatchers( "/api/v1/users/current").authenticated()
+                .antMatchers( "/api/v1/users/current/change/password").authenticated()
                 .antMatchers( "/api/v1/users/**", "/api/v1/roles/**").hasAuthority(RolePermission.Authority.USER_ADMIN.name())
                 .anyRequest().authenticated()
                 .and()

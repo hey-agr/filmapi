@@ -106,7 +106,7 @@ public class MovieControllerV1 {
             return created(
                     ServletUriComponentsBuilder
                             .fromContextPath(request)
-                            .path("/api/v1/movie/{id}")
+                            .path("/api/v1/movies/{id}")
                             .buildAndExpand(movieSaved.getId())
                             .toUri())
                     .build();
@@ -132,7 +132,7 @@ public class MovieControllerV1 {
         return created(
                 ServletUriComponentsBuilder
                         .fromContextPath(request)
-                        .path("/api/v1/movie/{id}")
+                        .path("/api/v1/movies/{id}")
                         .buildAndExpand(movieService.save(currentMovie).getId())
                         .toUri())
                 .build();
