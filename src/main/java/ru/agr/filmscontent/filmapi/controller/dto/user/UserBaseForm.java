@@ -26,11 +26,6 @@ public class UserBaseForm implements Serializable {
     @ApiModelProperty(value = "User role ids", position = 4)
     private List<RoleData> roles;
 
-    @Data
-    public static class RoleData implements Serializable {
-        private Long id;
-    }
-
     @ApiModelProperty(value = "Name", position = 5)
     private String name;
 
@@ -48,4 +43,9 @@ public class UserBaseForm implements Serializable {
 
     @ApiModelProperty(value = "Theme", position = 11)
     private String theme;
+
+    @Data
+    public static class RoleData implements Serializable {
+        private Long id;
+    }
 }

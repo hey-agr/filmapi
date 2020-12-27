@@ -1,7 +1,6 @@
 package ru.agr.filmscontent.filmapi.controller.dto.movie;
 
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
