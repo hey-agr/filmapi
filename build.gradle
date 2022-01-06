@@ -1,12 +1,12 @@
 buildscript {
 	ext {
-		String springBootVersion = '2.6.2'
-		String springDependecyManagementVersion = '1.0.11.RELEASE'
-		String swaggerVersion = '3.0.0'
-		String lombokVersion = '1.18.22'
-		String postgresqlVersion = '42.3.0'
-		String flywayVersion = '8.0.2'
-		String log4jVersion = '2.16.0'
+		springBootVersion = '2.6.2'
+		springDependecyManagementVersion = '1.0.11.RELEASE'
+		swaggerVersion = '3.0.0'
+		lombokVersion = '1.18.22'
+		postgresqlVersion = '42.3.0'
+		flywayVersion = '8.0.2'
+		log4jVersion = '2.16.0'
 	}
 
 	// https://nvd.nist.gov/vuln/detail/CVE-2021-44228
@@ -18,7 +18,6 @@ plugins {
 	id 'org.springframework.boot' version "${springBootVersion}"
 	id 'io.spring.dependency-management' version "${springDependecyManagementVersion}"
 	id "org.flywaydb.flyway" version "${flywayVersion}"
-	id 'org.springframework.experimental.aot' version '0.11.1'
 }
 
 group = 'ru.agr.filmscontent'
@@ -56,16 +55,9 @@ configurations.all {
 	}
 }
 
-bootBuildImage {
-	builder = "paketobuildpacks/builder:tiny"
-	environment = [
-			"BP_NATIVE_IMAGE" : "true"
-	]
-}
 
 repositories {
 	mavenCentral()
-	maven { url 'https://repo.spring.io/release' }
 }
 
 dependencies {
