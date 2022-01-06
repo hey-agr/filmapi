@@ -1,20 +1,44 @@
+buildscript {
+	ext {
+		String springBootVersion = '2.6.2'
+		String springDependecyManagementVersion = '1.0.11.RELEASE'
+		String swaggerVersion = '3.0.0'
+		String lombokVersion = '1.18.22'
+		String postgresqlVersion = '42.3.0'
+		String flywayVersion = '8.0.2'
+		String log4jVersion = '2.16.0'
+	}
+
+	// https://nvd.nist.gov/vuln/detail/CVE-2021-44228
+	ext['log4j2.version'] = log4jVersion
+}
+
 plugins {
-	id 'org.springframework.boot' version '2.2.4.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
-	id "org.flywaydb.flyway" version '5.2.4'
+	id 'org.springframework.boot' version "${springBootVersion}"
+	id 'io.spring.dependency-management' version "${springDependecyManagementVersion}"
+	id "org.flywaydb.flyway" version "${flywayVersion}"
+	id 'org.springframework.experimental.aot' version '0.11.1'
 }
 
 group = 'ru.agr.filmscontent'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+version = '1.0.0'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+def project_schema_name = 'main'
+def local_postgres_url = System.getenv('JDBC_DATABASE_URL') ? System.getenv('JDBC_DATABASE_URL') : 'jdbc:postgresql://localhost:5432/filmapi'
+def local_db_user = System.getenv('JDBC_DATABASE_USERNAME') ? System.getenv('JDBC_DATABASE_USERNAME') : 'postgres'
+def local_db_password = System.getenv('JDBC_DATABASE_PASSWORD') ? System.getenv('JDBC_DATABASE_PASSWORD') : 'P@ssw0rd'
 
 flyway {
-	url = 'jdbc:postgresql://localhost:5432/filmapi'
-	locations = ['filesystem:' + rootDir + '/src/main']
-	user = 'postgres'
-	password = 'postgres'
-	schemas = ['main']
+	url = local_postgres_url
+	user = local_db_user
+	password = local_db_password
+	schemas = [project_schema_name]
 }
 
 configurations {
@@ -24,35 +48,41 @@ configurations {
 	}
 }
 
+configurations.all {
+	resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+		if (details.requested.group == 'org.flywaydb') {
+			details.useVersion flywayVersion
+		}
+	}
+}
+
+bootBuildImage {
+	builder = "paketobuildpacks/builder:tiny"
+	environment = [
+			"BP_NATIVE_IMAGE" : "true"
+	]
+}
+
 repositories {
 	mavenCentral()
+	maven { url 'https://repo.spring.io/release' }
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.9'
+
+	implementation group: 'org.postgresql', name: 'postgresql', version: "${postgresqlVersion}"
+	implementation "org.flywaydb:flyway-core:${flywayVersion}"
 
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
-	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
-	compile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-	compileOnly 'org.projectlombok:lombok:1.18.10'
-	annotationProcessor 'org.projectlombok:lombok:1.18.10'
-	// Журналирование
-	implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+	implementation group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+	compileOnly "org.projectlombok:lombok:${lombokVersion}"
+	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     //SWAGGER
-	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
-
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
-}
-
-test {
-	useJUnitPlatform()
+	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: "${swaggerVersion}"
 }

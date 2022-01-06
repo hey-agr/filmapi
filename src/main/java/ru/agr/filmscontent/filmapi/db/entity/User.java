@@ -20,8 +20,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
@@ -47,11 +45,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = FilmApiMetaUtils.user.fld.id)
     private Long id;
 
-    @NotEmpty
     @Column(name = FilmApiMetaUtils.user.fld.username)
     private String username;
 
-    @NotEmpty
     @Column(name = FilmApiMetaUtils.user.fld.password)
     private String password;
 
@@ -59,7 +55,6 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = FilmApiMetaUtils.user.fld.date_created)
     private LocalDateTime dateCreated;
 
-    @NotNull
     @Column(name = FilmApiMetaUtils.user.fld.blocked)
     private Boolean blocked;
 

@@ -1,17 +1,12 @@
 package ru.agr.filmscontent.filmapi.security.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import ru.agr.filmscontent.filmapi.security.CustomUserDetailsService;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
@@ -26,11 +21,7 @@ public class JwtTokenProvider {
 
     public JwtTokenProvider(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-    }
-
-    @PostConstruct
-    protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(JwtPropertiesUtil.SECRET_KEY.getBytes());
+        this.secretKey = Base64.getEncoder().encodeToString(JwtPropertiesUtil.SECRET_KEY.getBytes());
     }
 
     public String createToken(String username, List<String> roles) {
