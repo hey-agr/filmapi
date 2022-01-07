@@ -7,6 +7,7 @@ buildscript {
 		postgresqlVersion = '42.3.0'
 		flywayVersion = '8.0.2'
 		log4jVersion = '2.16.0'
+		testContainersVersion = '1.16.2'
 	}
 
 	// https://nvd.nist.gov/vuln/detail/CVE-2021-44228
@@ -55,26 +56,51 @@ configurations.all {
 	}
 }
 
+task prepareArtifact() {
+	doLast {
+		def moduleName = "filmapi"
+		def artifactsDirectory = "${rootDir.toString()}/build/libs".toString()
+		def jarExtension = "jar"
+		copy {
+			from "${artifactsDirectory}/${moduleName}-${version}.${jarExtension}"
+			rename { String filename -> return "${moduleName}.${jarExtension}"}
+			into "${artifactsDirectory}"
+		}
+	}
+}
+
+bootJar {
+	enabled = true
+	launchScript()
+	finalizedBy(prepareArtifact)
+}
 
 repositories {
 	mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	//Spring
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+	//DB
 	implementation group: 'org.postgresql', name: 'postgresql', version: "${postgresqlVersion}"
 	implementation "org.flywaydb:flyway-core:${flywayVersion}"
 
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
+	//Lombok
 	implementation group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
 	compileOnly "org.projectlombok:lombok:${lombokVersion}"
 	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     //SWAGGER
 	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: "${swaggerVersion}"
+
+	//TESTS
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation "org.testcontainers:postgresql:${testContainersVersion}"
 }

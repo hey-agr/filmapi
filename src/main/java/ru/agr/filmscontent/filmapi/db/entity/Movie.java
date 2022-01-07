@@ -53,6 +53,8 @@ public class Movie extends BaseEntity {
     @Column(name = FilmApiMetaUtils.movie.fld.video)
     private String video;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = FilmApiMetaUtils.movie_genre.name, schema = FilmApiMetaUtils.SCHEMA,
             joinColumns = {
