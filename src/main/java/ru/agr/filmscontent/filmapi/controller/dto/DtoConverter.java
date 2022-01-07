@@ -10,11 +10,7 @@ import ru.agr.filmscontent.filmapi.controller.dto.role.RoleForm;
 import ru.agr.filmscontent.filmapi.controller.dto.role.RolePermissionDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.user.UserBaseForm;
 import ru.agr.filmscontent.filmapi.controller.dto.user.UserDTO;
-import ru.agr.filmscontent.filmapi.db.entity.Genre;
-import ru.agr.filmscontent.filmapi.db.entity.Movie;
-import ru.agr.filmscontent.filmapi.db.entity.Role;
-import ru.agr.filmscontent.filmapi.db.entity.RolePermission;
-import ru.agr.filmscontent.filmapi.db.entity.User;
+import ru.agr.filmscontent.filmapi.db.entity.*;
 import ru.agr.filmscontent.filmapi.service.GenreService;
 import ru.agr.filmscontent.filmapi.service.RoleService;
 

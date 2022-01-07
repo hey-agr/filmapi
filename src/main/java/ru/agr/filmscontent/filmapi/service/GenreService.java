@@ -1,29 +1,16 @@
 package ru.agr.filmscontent.filmapi.service;
 
-import org.springframework.stereotype.Service;
 import ru.agr.filmscontent.filmapi.db.entity.Genre;
-import ru.agr.filmscontent.filmapi.db.repository.GenreRepository;
 
 import java.util.List;
 
-@Service
-public class GenreService {
+/**
+ * @author Arslan Rabadanov
+ */
+public interface GenreService {
+    Genre getByName(String name);
 
-    private final GenreRepository genreRepository;
+    List<Genre> getAll();
 
-    public GenreService(GenreRepository genreRepository) {
-        this.genreRepository = genreRepository;
-    }
-
-    public Genre getByName(String name) {
-        return genreRepository.findByName(name);
-    }
-
-    public List<Genre> getAll() {
-        return genreRepository.findAll();
-    }
-
-    public Genre save(Genre genre) {
-        return genreRepository.save(genre);
-    }
+    Genre save(Genre genre);
 }

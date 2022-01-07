@@ -1,24 +1,13 @@
 package ru.agr.filmscontent.filmapi.service;
 
-import org.springframework.stereotype.Service;
 import ru.agr.filmscontent.filmapi.db.entity.Role;
 import ru.agr.filmscontent.filmapi.db.entity.RolePermission;
-import ru.agr.filmscontent.filmapi.db.repository.RolePermissionRepository;
 
-@Service
-public class RolePermissionService {
+/**
+ * @author Arslan Rabadanov
+ */
+public interface RolePermissionService {
+    RolePermission save(RolePermission RolePermission);
 
-    private final RolePermissionRepository rolePermissionRepository;
-
-    public RolePermissionService(RolePermissionRepository rolePermissionRepository) {
-        this.rolePermissionRepository = rolePermissionRepository;
-    }
-
-    public RolePermission save(RolePermission RolePermission) {
-        return rolePermissionRepository.saveAndFlush(RolePermission);
-    }
-
-    public void deleteByRole(Role role) {
-        rolePermissionRepository.deleteAllByRole(role);
-    }
+    void deleteByRole(Role role);
 }
