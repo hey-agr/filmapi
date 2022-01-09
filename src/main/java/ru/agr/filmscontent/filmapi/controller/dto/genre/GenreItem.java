@@ -1,6 +1,9 @@
 package ru.agr.filmscontent.filmapi.controller.dto.genre;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *

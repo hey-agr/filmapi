@@ -19,11 +19,9 @@ import ru.agr.filmscontent.filmapi.service.MovieService;
 import ru.agr.filmscontent.filmapi.service.mapper.MovieMapper;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.nonNull;
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.created;
 

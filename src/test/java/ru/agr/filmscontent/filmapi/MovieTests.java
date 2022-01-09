@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
+import ru.agr.filmscontent.filmapi.db.entity.MovieType;
 import ru.agr.filmscontent.filmapi.service.MovieService;
 
 /**
@@ -27,7 +28,7 @@ public class MovieTests extends DatabaseTest {
         newMovie.setTitleEn("Cool film");
         newMovie.setYear("2022");
         newMovie.setImdbID("tt3230854");
-        newMovie.setType(Movie.MovieType.movie);
+        newMovie.setType(MovieType.movie);
         newMovie.setPoster("https://m.media-amazon.com/images/M/MV5BMTQ2MTgxNTU3Ml5BMl5BanBnXkFtZTcwMzg4OTAzMQ@@._V1_.jpg");
         newMovie.setDescription("Some description");
         newMovie.setCountry("RU");

@@ -1,7 +1,6 @@
 package ru.agr.filmscontent.filmapi.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,8 +20,6 @@ import ru.agr.filmscontent.filmapi.service.mapper.GenreMapper;
 import ru.agr.filmscontent.filmapi.service.mapper.MovieMapper;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

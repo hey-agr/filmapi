@@ -5,13 +5,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.agr.filmscontent.filmapi.controller.dto.genre.GenreItem;
-import ru.agr.filmscontent.filmapi.db.entity.Movie;
 import ru.agr.filmscontent.filmapi.db.entity.MovieType;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
