@@ -2,7 +2,7 @@ package ru.agr.filmscontent.filmapi.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import ru.agr.filmscontent.filmapi.db.meta.FilmApiMetaUtils;
+import ru.agr.filmscontent.filmapi.db.meta.DBMetaConstants;
 
 import javax.persistence.*;
 
@@ -12,7 +12,7 @@ import javax.persistence.*;
  * @author Arslan Rabadanov
  */
 @Entity
-@Table(schema = FilmApiMetaUtils.SCHEMA, name = FilmApiMetaUtils.role_permission.name)
+@Table(schema = DBMetaConstants.SCHEMA, name = DBMetaConstants.RolePermissionTableConstants.name)
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Builder
@@ -21,18 +21,18 @@ import javax.persistence.*;
 public class RolePermission extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = FilmApiMetaUtils.role_permission.fld.id)
+    @Column(name = DBMetaConstants.RolePermissionTableConstants.fld.id)
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = FilmApiMetaUtils.role_permission.fld.authority)
+    @Column(name = DBMetaConstants.RolePermissionTableConstants.fld.authority)
     private Authority authority;
 
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = FilmApiMetaUtils.role_permission.fld.role_id, nullable = false)
+    @JoinColumn(name = DBMetaConstants.RolePermissionTableConstants.fld.role_id, nullable = false)
     private Role role;
 
     public enum Authority {

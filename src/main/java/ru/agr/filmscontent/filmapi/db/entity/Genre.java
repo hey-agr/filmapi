@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import ru.agr.filmscontent.filmapi.db.meta.FilmApiMetaUtils;
+import ru.agr.filmscontent.filmapi.db.meta.DBMetaConstants;
 
 import javax.persistence.*;
 
@@ -14,7 +14,7 @@ import javax.persistence.*;
  * @author Arslan Rabadanov
  */
 @Entity
-@Table(schema = FilmApiMetaUtils.SCHEMA, name = FilmApiMetaUtils.genre.name)
+@Table(schema = DBMetaConstants.SCHEMA, name = DBMetaConstants.GenreTableConstants.name)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,9 +22,9 @@ import javax.persistence.*;
 public class Genre extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = FilmApiMetaUtils.genre.fld.id)
+    @Column(name = DBMetaConstants.GenreTableConstants.fld.id)
     private Long id;
 
-    @Column(name = FilmApiMetaUtils.genre.fld.name)
+    @Column(name = DBMetaConstants.GenreTableConstants.fld.name)
     private String name;
 }

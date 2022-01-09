@@ -1,20 +1,20 @@
 package ru.agr.filmscontent.filmapi.db.meta;
 
+import lombok.experimental.UtilityClass;
+
 /**
  * Database metadata
  *
  * @author Arslan Rabadanov
  */
-public final class FilmApiMetaUtils {
+@UtilityClass
+public final class DBMetaConstants {
     public static final String SCHEMA = "main";
-
-    private FilmApiMetaUtils() {
-    }
 
     /**
      * Table Movie
      */
-    public static final class movie {
+    public static final class MovieTableConstants {
         public static final String name = "movie";
 
         public static final class fld {
@@ -64,7 +64,7 @@ public final class FilmApiMetaUtils {
     /**
      * Table Genre
      */
-    public static final class genre {
+    public static final class GenreTableConstants {
         public static final String name = "genre";
 
         public static final class fld {
@@ -82,7 +82,7 @@ public final class FilmApiMetaUtils {
     /**
      * Table MovieGenre
      */
-    public static final class movie_genre {
+    public static final class MovieGenreTableConstants {
         public static final String name = "movie_genre";
 
         public static final class fld {
@@ -100,7 +100,7 @@ public final class FilmApiMetaUtils {
     /**
      * Table user
      */
-    public static final class user {
+    public static final class UserTableConstants {
         public static final String name = "user";
 
         public static final class fld {
@@ -162,7 +162,7 @@ public final class FilmApiMetaUtils {
     /**
      * Table role
      */
-    public static final class role {
+    public static final class RoleTableConstants {
         public static final String name = "role";
 
         public static final class fld {
@@ -184,7 +184,7 @@ public final class FilmApiMetaUtils {
     /**
      * Table user_role
      */
-    public static final class user_role {
+    public static final class UserRoleTableConstants {
         public static final String name = "user_role";
 
         public static final class fld {
@@ -202,7 +202,7 @@ public final class FilmApiMetaUtils {
     /**
      * Table role_permission
      */
-    public static final class role_permission {
+    public static final class RolePermissionTableConstants {
         public static final String name = "role_permission";
 
         public static final class fld {

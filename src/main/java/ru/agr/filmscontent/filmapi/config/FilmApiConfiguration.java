@@ -2,6 +2,7 @@ package ru.agr.filmscontent.filmapi.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -58,22 +59,10 @@ public class FilmApiConfiguration {
     }
 
     @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.OAS_30)
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.regex("(?!/error.*).*"))
-                .build()
-                .apiInfo(apiInfo())
-                .securitySchemes(securityScheme())
-                .securityContexts(securityContexts());
-    }
-
-    @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedMethods("*")
                         .allowedOrigins("*")
@@ -82,49 +71,4 @@ public class FilmApiConfiguration {
             }
         };
     }
-
-
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("Film API Rest")
-                .description("")
-                .termsOfServiceUrl("")
-                .license("")
-                .licenseUrl("")
-                .version("1.0.0")
-                //.contact(new Contact(""))
-                .build();
-    }
-
-    private List<SecurityScheme> securityScheme() {
-        return singletonList(new ApiKey("Authorization", "Authorization", "header"));
-    }
-
-    @Bean
-    public SecurityConfiguration security() {
-        return SecurityConfigurationBuilder
-                .builder()
-                .scopeSeparator(",")
-                .additionalQueryStringParams(null)
-                .useBasicAuthenticationWithAccessCodeGrant(false).build();
-    }
-
-    private List<SecurityContext> securityContexts() {
-        return singletonList(
-                SecurityContext
-                        .builder()
-                        .securityReferences(defaultAuth())
-                        .build()
-        );
-    }
-
-    private List<SecurityReference> defaultAuth() {
-        return singletonList(
-                new SecurityReference(
-                        "Authorization",
-                        new AuthorizationScope[]{new AuthorizationScope("global", "accessEverything")}
-                )
-        );
-    }
-
 }

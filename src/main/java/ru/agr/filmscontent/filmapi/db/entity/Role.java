@@ -1,7 +1,7 @@
 package ru.agr.filmscontent.filmapi.db.entity;
 
 import lombok.*;
-import ru.agr.filmscontent.filmapi.db.meta.FilmApiMetaUtils;
+import ru.agr.filmscontent.filmapi.db.meta.DBMetaConstants;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -12,7 +12,7 @@ import java.util.Set;
  * @author Arslan Rabadanov
  */
 @Entity
-@Table(schema = FilmApiMetaUtils.SCHEMA, name = FilmApiMetaUtils.role.name)
+@Table(schema = DBMetaConstants.SCHEMA, name = DBMetaConstants.RoleTableConstants.name)
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Builder
@@ -21,13 +21,13 @@ import java.util.Set;
 public class Role extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = FilmApiMetaUtils.role.fld.id)
+    @Column(name = DBMetaConstants.RoleTableConstants.fld.id)
     private Long id;
 
-    @Column(name = FilmApiMetaUtils.role.fld.name)
+    @Column(name = DBMetaConstants.RoleTableConstants.fld.name)
     private String name;
 
-    @Column(name = FilmApiMetaUtils.role.fld.description)
+    @Column(name = DBMetaConstants.RoleTableConstants.fld.description)
     private String description;
 
     @EqualsAndHashCode.Exclude
