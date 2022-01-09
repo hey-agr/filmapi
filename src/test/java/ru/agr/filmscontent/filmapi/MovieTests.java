@@ -21,7 +21,7 @@ public class MovieTests extends DatabaseTest {
     private MovieService movieService;
 
     @Test
-    public void test_save_movie_without_genres() {
+    public void testSaveMovieWithoutGenres() {
         Movie newMovie = new Movie();
         newMovie.setTitle("Крутой фильм");
         newMovie.setTitleEn("Cool film");

@@ -5,12 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.agr.filmscontent.filmapi.controller.dto.DtoConverter;
+import ru.agr.filmscontent.filmapi.controller.dto.ResponseHelper;
 import ru.agr.filmscontent.filmapi.controller.dto.user.*;
 import ru.agr.filmscontent.filmapi.db.entity.Role;
 import ru.agr.filmscontent.filmapi.db.entity.User;
 import ru.agr.filmscontent.filmapi.service.AuthenticationService;
 import ru.agr.filmscontent.filmapi.service.UserService;
+import ru.agr.filmscontent.filmapi.service.mapper.UserMapper;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,14 +37,17 @@ public class UserControllerV1 {
 
     private final AuthenticationService authenticationService;
 
-    private final DtoConverter dtoConverter;
+    private final ResponseHelper dtoConverter;
+    private final UserMapper userMapper;
 
     public UserControllerV1(UserService userService,
                             AuthenticationService authenticationService,
-                            DtoConverter dtoConverter) {
+                            ResponseHelper dtoConverter,
+                            UserMapper userMapper) {
         this.userService = userService;
         this.authenticationService = authenticationService;
         this.dtoConverter = dtoConverter;
+        this.userMapper = userMapper;
     }
 
     @GetMapping("/current")
@@ -51,7 +55,7 @@ public class UserControllerV1 {
         log.debug("Get current user");
         User currentUser = authenticationService.getUser(request);
         response.addHeader("Authorization", "Bearer " + authenticationService.createToken(currentUser));
-        return ok(dtoConverter.convertUserToDTO(currentUser));
+        return ok(userMapper.toDto(currentUser));
     }
 
     @PostMapping("/current/change/password")
@@ -65,7 +69,7 @@ public class UserControllerV1 {
         User currentUser = authenticationService.getUser(request);
         currentUser = authenticationService.changePassword(userPassword.getCurrentPassword(), userPassword.getNewPassword(), currentUser);
         response.addHeader("Authorization", "Bearer " + authenticationService.createToken(currentUser));
-        return ok(dtoConverter.convertUserToDTO(currentUser));
+        return ok(userMapper.toDto(currentUser));
     }
 
     @GetMapping("")
@@ -73,7 +77,7 @@ public class UserControllerV1 {
         log.debug("Find all users");
         return ok(
                 userService.getAll().stream()
-                        .map(dtoConverter::convertUserToDTO)
+                        .map(userMapper::toDto)
                         .collect(Collectors.toList())
         );
     }
@@ -82,7 +86,7 @@ public class UserControllerV1 {
     public ResponseEntity<?> get(@PathVariable("id") Long id) {
         log.debug("Find user by id = " + id);
         User user = userService.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id = " + id + " not found!"));
-        return ok(dtoConverter.convertUserToDTO(user));
+        return ok(userMapper.toDto(user));
     }
 
     @DeleteMapping("/{id}")

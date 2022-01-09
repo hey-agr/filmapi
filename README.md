@@ -2,7 +2,7 @@
 
 Simple REST API
 
-Spring Boot / Spring Data JPA / Spring Web / Spring Security / PostgreSQL / Flyway / Swagger / Lombok
+Spring Boot (Data, Web, Security) / PostgreSQL / Flyway / Swagger / Lombok / Mapstruct / Docker
 
 https://film-api-backend.herokuapp.com/swagger-ui/
 

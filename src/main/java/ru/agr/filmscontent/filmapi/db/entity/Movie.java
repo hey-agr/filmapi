@@ -64,9 +64,4 @@ public class Movie extends BaseEntity {
                 @JoinColumn(name = FilmApiMetaUtils.movie_genre.fld.genre_id, referencedColumnName = FilmApiMetaUtils.genre.fld.id)
     })
     private List<Genre> genres;
-
-    public enum MovieType {
-        movie,
-        series;
-    }
 }

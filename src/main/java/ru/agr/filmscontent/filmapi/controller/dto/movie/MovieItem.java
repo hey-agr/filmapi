@@ -4,10 +4,12 @@ package ru.agr.filmscontent.filmapi.controller.dto.movie;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.agr.filmscontent.filmapi.controller.dto.genre.GenreItem;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
+import ru.agr.filmscontent.filmapi.db.entity.MovieType;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,11 +19,11 @@ import java.util.List;
  *
  * @author Arslan Rabadanov
  */
+@ApiModel
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@ApiModel
-public class MovieItem implements Serializable {
+@Data
+public class MovieItem {
     @ApiModelProperty(value = "ID", position = 1)
     private Long id;
 
@@ -38,7 +40,7 @@ public class MovieItem implements Serializable {
     private String imdbID;
 
     @ApiModelProperty(value = "Type", position = 6, allowableValues = "movie,series")
-    private Movie.MovieType type;
+    private MovieType type;
 
     @ApiModelProperty(value = "Poster URL", position = 7)
     private String poster;

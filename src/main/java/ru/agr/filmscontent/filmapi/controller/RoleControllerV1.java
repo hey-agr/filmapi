@@ -5,12 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.agr.filmscontent.filmapi.controller.dto.DtoConverter;
+import ru.agr.filmscontent.filmapi.controller.dto.ResponseHelper;
 import ru.agr.filmscontent.filmapi.controller.dto.role.RoleForm;
 import ru.agr.filmscontent.filmapi.db.entity.Role;
 import ru.agr.filmscontent.filmapi.db.entity.RolePermission;
 import ru.agr.filmscontent.filmapi.service.RolePermissionService;
 import ru.agr.filmscontent.filmapi.service.RoleService;
+import ru.agr.filmscontent.filmapi.service.mapper.RoleMapper;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,28 +24,27 @@ import static org.springframework.http.ResponseEntity.*;
 @RestController
 @RequestMapping("/api/v1/roles")
 public class RoleControllerV1 {
-
     private final RoleService roleService;
-
-    private final DtoConverter dtoConverter;
-
+    private final ResponseHelper dtoConverter;
+    private final RoleMapper roleMapper;
     private final RolePermissionService rolePermissionService;
 
     public RoleControllerV1(RoleService roleService,
                             RolePermissionService rolePermissionService,
-                            DtoConverter dtoConverter) {
+                            ResponseHelper dtoConverter,
+                            RoleMapper roleMapper) {
         this.roleService = roleService;
         this.dtoConverter = dtoConverter;
         this.rolePermissionService = rolePermissionService;
+        this.roleMapper = roleMapper;
     }
 
     @GetMapping("")
     public ResponseEntity<?> getAll(HttpServletRequest request) {
         log.debug("Find all roles");
-
         return ok(
                 roleService.getAll().stream()
-                        .map(dtoConverter::convertRoleToDTO)
+                        .map(roleMapper::toDto)
                         .collect(Collectors.toList())
         );
     }
@@ -52,9 +52,8 @@ public class RoleControllerV1 {
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable("id") Long id, HttpServletRequest request) {
         log.debug("Find role by id = " + id);
-
         Role role = roleService.findById(id).orElseThrow(() -> new EntityNotFoundException("Role with id = " + id + " not found!"));
-        return ok(dtoConverter.convertRoleToDTO(role));
+        return ok(roleMapper.toDto(role));
     }
 
     @Transactional

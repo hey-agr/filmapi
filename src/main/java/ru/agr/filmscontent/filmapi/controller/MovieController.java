@@ -1,6 +1,7 @@
 package ru.agr.filmscontent.filmapi.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import ru.agr.filmscontent.filmapi.controller.dto.DtoConverter;
+import ru.agr.filmscontent.filmapi.controller.dto.ResponseHelper;
 import ru.agr.filmscontent.filmapi.controller.dto.genre.GenreItem;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieDTO;
 import ru.agr.filmscontent.filmapi.controller.dto.movie.MovieItem;
@@ -16,12 +17,16 @@ import ru.agr.filmscontent.filmapi.controller.dto.movie.MoviesPageDTO;
 import ru.agr.filmscontent.filmapi.db.entity.Movie;
 import ru.agr.filmscontent.filmapi.service.GenreService;
 import ru.agr.filmscontent.filmapi.service.MovieService;
+import ru.agr.filmscontent.filmapi.service.mapper.GenreMapper;
+import ru.agr.filmscontent.filmapi.service.mapper.MovieMapper;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Movie REST controller
@@ -31,20 +36,23 @@ import java.util.stream.Collectors;
 @RestController
 @Slf4j
 public class MovieController {
-
     private final MovieService movieService;
-
     private final GenreService genreService;
-
-    private final DtoConverter dtoConverter;
+    private final ResponseHelper responseHelper;
+    private final MovieMapper movieMapper;
+    private final GenreMapper genreMapper;
 
     @Autowired
     public MovieController(MovieService movieService,
                            GenreService genreService,
-                           DtoConverter dtoConverter) {
+                           ResponseHelper responseHelper,
+                           MovieMapper movieMapper,
+                           GenreMapper genreMapper) {
         this.movieService = movieService;
         this.genreService = genreService;
-        this.dtoConverter = dtoConverter;
+        this.responseHelper = responseHelper;
+        this.movieMapper = movieMapper;
+        this.genreMapper = genreMapper;
     }
 
     @ApiIgnore
@@ -57,17 +65,21 @@ public class MovieController {
     @GetMapping("movies")
     public MovieDTO findAll() {
         log.info("Find all movies");
-        List<Movie> movies = movieService.getAll();
-        return dtoConverter.getMovieDTO(movies);
+        List<MovieItem> movies = movieMapper.toItem(movieService.getAll());
+        long totalCount = nonNull(movies) ? (long) movies.size() : 0L;
+        return MovieDTO.builder()
+                .totalResults(totalCount)
+                .response(totalCount > 0)
+                .search(movies)
+                .build();
     }
 
     @GetMapping("genre")
     public List<GenreItem> findAllGenre() {
         log.info("Find all genre");
-        List<GenreItem> genres = genreService.getAll().stream()
-                .map(genre -> new GenreItem(genre.getName()))
+        return genreService.getAll().stream()
+                .map(genreMapper::toItem)
                 .collect(Collectors.toList());
-        return genres;
     }
 
     @RequestMapping(value = "movies/page={pageNum}/size={pageSize}", method = RequestMethod.GET)
@@ -75,37 +87,32 @@ public class MovieController {
                                          @PathVariable(value="pageSize") Integer pageSize) {
         log.info("Find all movies pageable");
         Page<Movie> moviesPage = movieService.getAll(PageRequest.of(pageNum-1, pageSize));
-
-        return new MoviesPageDTO(pageNum,
-                moviesPage.getTotalPages(),
-                pageSize,
-                Integer.valueOf(moviesPage.getContent().size()).longValue(),
-                movieService.count(),
-                true,
-                dtoConverter.getMovieItems(moviesPage.getContent()));
+        return MoviesPageDTO.builder()
+                .page(pageNum)
+                .size(pageSize)
+                .totalPages(moviesPage.getTotalPages())
+                .currentSize((long) moviesPage.getContent().size())
+                .totalResults(movieService.count())
+                .response(true)
+                .search(movieMapper.toItem(moviesPage.getContent()))
+                .build();
     }
 
     @GetMapping("movies/find")
-    public MovieDTO findByTitle(@RequestParam(value = "title") String title) {
+    public ResponseEntity<MovieDTO> findByTitle(@RequestParam(value = "title") String title) {
         log.info("Find all movies by title: " + title);
-        if (title == null) {
-            return new MovieDTO(new ArrayList<>(), 0L, false);
-        }
-
-        List<Movie> movies = movieService.getByTitle(title);
-
-        return dtoConverter.getMovieDTO(movies);
+        List<MovieItem> movies = movieMapper.toItem(movieService.getByTitle(title));
+        return responseHelper.getMoviesDtoResponse(movies, HttpStatus.OK);
     }
 
     @GetMapping("movies/find/{id}")
     public ResponseEntity<MovieDTO> findById(@RequestParam(value = "id") long id) {
         log.info("Find movie by id: " + id);
-        Movie currentMovie = movieService.getById(id);
+        MovieItem currentMovie = movieMapper.toItem(movieService.getById(id));
         if (currentMovie == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<>(dtoConverter.getMovieDTO(Collections.singletonList(currentMovie)), HttpStatus.OK);
+        return responseHelper.getMovieDtoResponse(currentMovie, HttpStatus.OK);
     }
 
     @RequestMapping(value = "movies/page={pageNum}/size={pageSize}/find", method = RequestMethod.GET)
@@ -113,25 +120,16 @@ public class MovieController {
                                              @PathVariable(value="pageSize") Integer pageSize,
                                              @RequestParam(value = "title") String title) {
         log.info("Find all movies pageable by title: " + title);
-        if (title == null) {
-            return new MoviesPageDTO(pageNum,
-                    0,
-                    pageSize,
-                    0L,
-                    0L,
-                    false,
-                    new ArrayList<>());
-        }
-
         Page<Movie> moviesPage = movieService.getByTitle(title, PageRequest.of(pageNum-1, pageSize));
-
-        return new MoviesPageDTO(pageNum,
-                moviesPage.getTotalPages(),
-                pageSize,
-                Integer.valueOf(moviesPage.getContent().size()).longValue(),
-                movieService.countByTitle(title),
-                true,
-                dtoConverter.getMovieItems(moviesPage.getContent()));
+        return MoviesPageDTO.builder()
+                .page(pageNum)
+                .size(pageSize)
+                .totalPages(moviesPage.getTotalPages())
+                .currentSize((long) moviesPage.getContent().size())
+                .totalResults(movieService.countByTitle(title))
+                .response(true)
+                .search(movieMapper.toItem(moviesPage.getContent()))
+                .build();
     }
 
     @Transactional
@@ -139,11 +137,11 @@ public class MovieController {
     public ResponseEntity<MovieDTO> create(@RequestBody MovieItem movieItem) {
         log.info("Create new movie: " + movieItem);
         try {
-            Movie movieSaved = movieService.save(dtoConverter.convertMovieItemToMovie(new Movie(), movieItem));
-            return new ResponseEntity<>(dtoConverter.getMovieDTO(Collections.singletonList(movieSaved)), HttpStatus.CREATED);
+            MovieItem movieSaved = movieMapper.toItem(movieService.save(responseHelper.convertMovieItemToMovie(new Movie(), movieItem)));
+            return responseHelper.getMovieDtoResponse(movieSaved, HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("Error create movie: " + movieItem, e);
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return responseHelper.getMovieDtoResponse(null, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -153,12 +151,12 @@ public class MovieController {
         log.info("Update movie: " + movieItem);
         Movie currentMovie = movieService.getById(id);
         if (currentMovie == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return responseHelper.getMovieDtoResponse(null, HttpStatus.NOT_FOUND);
         }
-
-        dtoConverter.convertMovieItemToMovie(currentMovie, movieItem);
+        currentMovie = responseHelper.convertMovieItemToMovie(currentMovie, movieItem);
         currentMovie.setId(id);
-        return new ResponseEntity<>(dtoConverter.getMovieDTO(Collections.singletonList(movieService.save(currentMovie))), HttpStatus.OK);
+        MovieItem savedMovie = movieMapper.toItem(movieService.save(currentMovie));
+        return responseHelper.getMovieDtoResponse(savedMovie, HttpStatus.OK);
     }
 
     @RequestMapping(value = "movies/delete/{id}", method = RequestMethod.DELETE)
@@ -168,7 +166,6 @@ public class MovieController {
         if (movie == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         movieService.delete(movie);
         return new ResponseEntity<>(HttpStatus.OK);
     }

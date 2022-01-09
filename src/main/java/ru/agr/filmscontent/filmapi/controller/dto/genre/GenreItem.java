@@ -1,8 +1,6 @@
 package ru.agr.filmscontent.filmapi.controller.dto.genre;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  *
@@ -10,7 +8,8 @@ import lombok.NoArgsConstructor;
  */
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@Data
+@Builder
 public class GenreItem {
     private String name;
 }

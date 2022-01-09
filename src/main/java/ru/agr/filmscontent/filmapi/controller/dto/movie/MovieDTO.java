@@ -2,17 +2,20 @@ package ru.agr.filmscontent.filmapi.controller.dto.movie;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class MovieDTO implements Serializable {
-    private final List<MovieItem> search;
+@SuperBuilder
+public class MovieDTO {
+    private List<MovieItem> search;
 
-    private final Long totalResults;
+    private Long totalResults;
 
-    private final Boolean response;
+    private Boolean response;
 }

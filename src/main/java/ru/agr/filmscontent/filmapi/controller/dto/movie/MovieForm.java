@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @ApiModel
-public class MovieForm extends MovieItem{
+public class MovieForm extends MovieItem {
     @ApiModelProperty(hidden = true, position = 1)
     private Long id;
 }
